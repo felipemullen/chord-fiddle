@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Fiddle</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/bootstrap-switches.css">
+    <link rel="stylesheet" href="./css/main.css">
+
+    <script src="./js/color-schemes.js"></script>
+    <script src="./js/metronome.js"></script>
+    <script src="./js/tuner.js"></script>
+</head>
+
+<body class="d-flex flex-column">
+
+    <nav class="navbar navbar-expand">
+        <a class="navbar-brand" href="">Chord Fiddle</a>
+        <a class="navbar-brand" href="#"></a>
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="javascript:;" onclick="saveFiddle()">
+                    <i class="fas fa-fw fa-cloud-upload-alt"></i>&nbsp;<span bind="saveButton">Save</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:;" onclick="newFiddle()">
+                    <i class="far fa-fw fa-edit"></i>New
+                </a>
+            </li>
+            <!-- TODO: toast window -->
+            <!-- TODO: loading spinner -->
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a title="Open Tools" href="javascript:toggleTools();" class="nav-link">
+                    <i class="fas fa-hammer"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a title="Share Fiddle" href="javascript:;" class="nav-link">
+                    <!-- TODO: share button functionality -->
+                    <i class="fas fa-fw fa-share-alt"></i>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="javascript:;" class="nav-link" onclick="toggleDropdown(this);">
+                    <i class="fa fa-fw fa-cog"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right settings-menu">
+                    <h6 class="dropdown-header">Settings</h6>
+                    <div class="dropdown-divider"></div>
+                    <div class="switch ml-3">
+                        <!-- TODO: change wrapping -->
+                        <input type="checkbox" data-setting="wordWrapOn" class="switch" id="word-wrap-on">
+                        <label for="word-wrap-on">Line wrapping</label>
+                    </div>
+                    <div class="switch ml-3">
+                        <!-- TODO: change diagrams -->
+                        <input type="checkbox" data-setting="diagramsOn" class="switch" id="chords-on">
+                        <label for="chords-on">Chord diagrams</label>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="form-group p-3">
+                        <label for="theme-select">Color Scheme</label>
+                        <select class="form-control" onchange="changeColors(this)" id="theme-select">
+                            <option value="theme-dark">Dark</option>
+                            <option value="theme-light">Light</option>
+                            <option value="theme-greenland">Greenland</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link">
+                    <!-- TODO: bugs/feature requests -->
+                    <i class="fab fa-github"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="flex-grow-1 d-flex align-items-stretch">
+        <div class="editor w-100 d-flex">
+            <!-- TODO: strum patterns -->
+            <!-- TODO: chord list -->
+            <!-- TODO: transpose -->
+            <div id="metadata" class="flex-grow-1 editor-panel no-wrap">
+                <h5 class="panel-header">Metadata</h5>
+                <div class="p-3 form">
+                    <input bind="title" class="form-control" type="text" placeholder="Title">
+                    <input bind="artist" class="form-control" type="text" placeholder="Artist">
+                    <textarea bind="description" class="form-control" type="text" rows="5" placeholder="Description"></textarea>
+                    <label for="tuning" class="form-label">Tuning</label>
+                    <select bind="tuning" name="tuning" class="form-control">
+                        <option value="standard">Standard (E-A-D-G-B-E)</option>
+                        <option value="standard">Drop D (D-A-D-G-B-E)</option>
+                        <option value="standard">Open G (D-G-D-G-B-D)</option>
+                        <option value="standard">Open D (D-A-D-F#-A-D)</option>
+                        <option value="standard">Open E (E-B-E-G#-B-E)</option>
+                    </select>
+                    <label for="capo" class="form-label">Capo</label>
+                    <select bind="capo" name="capo" class="form-control">
+                        <option value="0">None</option>
+                        <option value="1">1st Fret</option>
+                        <option value="2">2nd Fret</option>
+                        <option value="3">3rd Fret</option>
+                    </select>
+                </div>
+            </div>
+            <div id="song" class="flex-grow-1 d-flex flex-column editor-panel no-wrap">
+                <h5 class="panel-header">Song</h5>
+                <div class="d-flex flex-column" style="flex:1;">
+                    <div class="d-flex" style="flex:1;">
+                        <textarea bind="inputBox" class="no-wrap borderless" style="flex:1;" placeholder="Start typing here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="preview" class="flex-grow-1 d-flex flex-column editor-panel">
+                <h5 class="panel-header">Preview</h5>
+                <div class="no-wrap d-flex flex-column flex-grow-1">
+                    <div class="d-flex flex-grow-1">
+                        <div class="mt-2 p-2 flex-grow-1" bind="outputBox"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="d-flex navbar footer-nav slide-down">
+        <div class="metronome settings">
+            <div class="title">Metronome</div>
+            <div class="options">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <button onclick="tapTempo()" class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-dot-circle"></i>
+                        </button>
+                        <button onclick="decreaseTempo()" class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    <input type="number" max="350" min="30" class="form-control" value="80" bind="tempo">
+                    <div class="input-group-append">
+                        <button onclick="increaseTempo()" class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button onclick="toggleMetronome()" class="btn btn-outline-secondary" type="button">
+                            <span bind="metronomePlay"><i class="fas fa-play"></i></span>
+                            <span class="d-none" bind="metronomeStop"><i class="fas fa-stop"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tuner settings">
+            <div class="title">Tuner</div>
+            <div class="options">
+                <button class="btn btn-sm" string="e2">E</button>
+                <button class="btn btn-sm" string="a2">A</button>
+                <button class="btn btn-sm" string="d3">D</button>
+                <button class="btn btn-sm" string="g3">G</button>
+                <button class="btn btn-sm" string="b3">B</button>
+                <button class="btn btn-sm" string="e4">E</button>
+            </div>
+        </div>
+        <!-- TODO: need some ads here -->
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-functions.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyBFllBrYWdMMrYKYFPGFNky_AdMFI2Si-E",
+            authDomain: "chord-fiddle.firebaseapp.com",
+            databaseURL: "https://chord-fiddle.firebaseio.com",
+            projectId: "chord-fiddle"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+    <script src="./lib/bootstrap.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+    <script src="https://unpkg.com/split.js/split.min.js"></script>
+
+    <script src="./js/data-bind.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+
+</html>

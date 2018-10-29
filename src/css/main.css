@@ -1,0 +1,207 @@
+:root {
+    --nav: #1c2128;
+    --nav-shadow: #20262e;
+    --nav-text-bright: #f7f7f7;
+    --nav-text-dim: #6d747f;
+    --nav-text-hover: #0a80ee;
+    --nav-border: #315f9b;
+    --gutters: #454952;
+    --gutter-border: #20262e;
+    --editor-headers: #2e353e;
+    --editor-headers-border: #20262e;
+    --editor-headers-text: #6d747f;
+    --editor-text: #6d747f;
+    --editor-body: #20262e;
+    --editor-form: #1c2128;
+    --editor-form-text: #6d747f;
+    --preview-text: #f7f7f7;
+    --preview-chord-text: #454952;
+    --preview-chord-bg: #f7f7f7;
+    --footer-text: #20262e;
+    --footer-nav-bg: #f7f7f7;
+    --footer-nav-border: #315f9b;
+    --metronome-btn-bg: #f7f7f7;
+    --metronome-btn-text: #6d747f;
+    --tuner-btn-bg: #315f9b;
+    --tuner-btn-bg-hover: #0a80ee;
+    --tuner-btn-text: #f7f7f7;
+    --tuner-btn-play: #ee5a0a;
+}
+
+html, body {
+    height: 100%;
+}
+
+.slide-zero {
+    transform: translateY(0) !important;
+    transition: transform 200ms ease-in-out;
+}
+
+.slide-down {
+    transform: translateY(95%);
+    transition: transform 200ms ease-in-out;
+}
+
+.borderless {
+    border: none;
+}
+
+div.line {
+    height: 2em;
+    display: flex;
+    align-items: flex-end
+}
+
+.chord {
+    position: relative;
+}
+
+.chord:before {
+    content: '\0020';
+}
+
+.chord:after {
+    content: attr(data-chord);
+    background-color: var(--preview-chord-bg);
+    color: var(--preview-chord-text);
+    position: absolute;
+    border-radius: 0.15em;
+    padding: 0.1em 0.2em;
+    top: -1.5em;
+}
+
+.settings-menu {
+    width: 300px;
+}
+
+/* Editor */
+
+.editor>.editor-panel:first-child {
+    border-left: 10px solid var(--gutters);
+}
+
+.editor .editor-panel, .editor .editor-panel textarea {
+    overflow: hidden;
+    background-color: var(--editor-body);
+}
+
+.editor .editor-panel h5 {
+    color: var(--editor-headers-text);
+    background-color: var(--editor-headers);
+}
+
+.editor .gutter {
+    cursor: ew-resize;
+    background-color: var(--gutters);
+    border-left: 1px solid var(--gutter-border);
+}
+
+.editor, .editor textarea {
+    color: var(--editor-text);
+}
+
+.editor textarea {
+    resize: none;
+}
+
+.no-wrap {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.editor textarea::-webkit-scrollbar-corner {
+    background-color: var(--primary);
+}
+
+.editor textarea::-webkit-scrollbar-track-piece {
+    background-color: var(--primary);
+}
+
+.editor textarea::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);
+}
+
+.editor textarea::-webkit-scrollbar {
+    background-color: var(--primary);
+}
+
+.editor .panel-header {
+    font-size: 1.1em;
+    padding: 0.2em 0.5em;
+    border-bottom: 1px solid var(--editor-headers-border);
+}
+
+/* Bootstrap Overrides */
+
+.editor-panel .form .form-control {
+    border: none;
+    background-color: var(--editor-form);
+    margin-bottom: 1em;
+}
+
+.editor-panel .form *::placeholder, .editor-panel .form select {
+    color: var(--editor-form-text);
+}
+
+.editor-panel#preview {
+    color: var(--preview-text);
+}
+
+.navbar {
+    box-shadow: 0px 1px 4px var(--nav-shadow);
+    background-color: var(--nav);
+    border-bottom: 4px solid var(--nav-border);
+}
+
+.navbar .navbar-brand, .navbar .nav-item.active .nav-link {
+    color: var(--nav-text-bright);
+}
+
+.navbar .nav-item .nav-link {
+    color: var(--nav-text-dim);
+}
+
+.navbar .nav-item .nav-link:hover {
+    color: var(--nav-text-hover);
+}
+
+.navbar.footer-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    border-bottom: none;
+    color: var(--footer-text);
+    background-color: var(--footer-nav-bg);
+    border-top: 4px solid var(--footer-nav-border);
+}
+
+.settings .title {
+    text-align: center;
+    font-size: 0.75em;
+    color: var(--footer-text);
+}
+
+.settings.metronome .options input  {
+    /* border: none; */
+    width: 70px;
+    text-align: center;
+}
+
+.settings.metronome button {
+    background-color: var(--metronome-btn-bg);
+    color: var(--metronome-btn-text);
+}
+
+.settings.tuner .options button {
+    color: var(--tuner-btn-text);
+    background-color: var(--tuner-btn-bg);
+}
+
+.settings.tuner .options button:hover {
+    background-color: var(--tuner-btn-bg-hover);
+}
+
+.settings.tuner .options button.play {
+    background-color: var(--tuner-btn-play);
+}

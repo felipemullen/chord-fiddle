@@ -1,0 +1,21 @@
+{
+  "name": "chord-fiddle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build -d ./public ./src/index.html",
+    "start": "parcel -d ./public ./src/index.html",
+    "deploy": "firebase deploy",
+    "deploy-functions": "firebase deploy --only functions",
+    "deploy-web": "firebase deploy --only hosting"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "parcel": "^1.9.7"
+  }
+}

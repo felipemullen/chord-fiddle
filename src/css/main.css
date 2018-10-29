@@ -32,6 +32,10 @@ html, body {
     height: 100%;
 }
 
+.hide {
+    display: none !important;
+}
+
 .slide-zero {
     transform: translateY(0) !important;
     transition: transform 200ms ease-in-out;

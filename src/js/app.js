@@ -7,6 +7,7 @@
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
 
+    let splitPanels = null;
     let $scope;
 
     /**
@@ -53,13 +54,15 @@
             return element.parentNode != null && hasParentClass(element.parentNode, className);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        $scope = Bind.createScope();
-        $scope.inputBox.onInput = onTextInput;
-        $scope.inputBox.onChange = onTextInput;
-        $scope.tempo.onChange = () => { modifyTempo(0); };
+    function showLoading(isLoading) {
+        $scope.loadingSpinner.toggleClass('hide', !isLoading);
+        $scope.editorWrapper.toggleClass('hide', isLoading);
 
-        Split(['#metadata', '#song', '#preview'], {
+        if (splitPanels !== null) {
+            splitPanels.destroy();
+        }
+
+        splitPanels = Split(['#metadata', '#song', '#preview'], {
             elementStyle: (dimension, size, gutterSize) => ({
                 'flex-basis': `calc(${size}% - ${gutterSize}px)`,
             }),
@@ -70,15 +73,26 @@
             minSize: 0,
             cursor: 'ew-resize'
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        $scope = Bind.createScope();
+        $scope.inputBox.onInput = onTextInput;
+        $scope.inputBox.onChange = onTextInput;
+        $scope.tempo.onChange = () => { modifyTempo(0); };
 
         const fiddleId = getFiddleId();
         if (fiddleId) {
+            showLoading(true);
             getFiddle({ id: fiddleId })
                 .then((result) => {
                     loadFiddle(result);
+                    showLoading(false);
                     // TODO: resize panels to show preview only
                 })
                 .catch(loadError);
+        } else {
+            showLoading(false);
         }
 
         function getFiddleId() {

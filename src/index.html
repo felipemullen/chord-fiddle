@@ -42,14 +42,25 @@
                     <i class="fas fa-hammer"></i>
                 </a>
             </li>
-            <li class="nav-item">
-                <a title="Share Fiddle" href="javascript:;" class="nav-link">
-                    <!-- TODO: share button functionality -->
+            <li class="nav-item dropdown">
+                <a title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');">
                     <i class="fas fa-fw fa-share-alt"></i>
                 </a>
+                <div class="dropdown-menu dropdown-menu-right share-menu">
+                    <h6 class="dropdown-header">Share this fiddle</h6>
+                    <div class="dropdown-divider"></div>
+                    <div class="input-group input-group-sm py-2 px-3">
+                        <input type="text" class="form-control share-link" placeholder="Save this fiddle to share it!">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard();">
+                                <i class="fas fa-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </li>
             <li class="nav-item dropdown">
-                <a href="javascript:;" class="nav-link" onclick="toggleDropdown(this);">
+                <a href="javascript:;" class="nav-link" onclick="toggleMenu('settings-menu');">
                     <i class="fa fa-fw fa-cog"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right settings-menu">

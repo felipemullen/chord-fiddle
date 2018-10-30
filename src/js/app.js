@@ -162,32 +162,70 @@
             $scope.tempo.value = 80;
         }
 
-        let _menuOpen = false;
-        let _liElement = null;
+        window.copyToClipboard = function () {
+            const link = getShareLink();
+            const textArea = document.createElement('textarea');
+            textArea.value = link;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        };
 
-        function outsideClickHandler(e) {
-            let parentIsMenu = hasParentClass(e.target, 'dropdown-menu');
-            if (_menuOpen === true && parentIsMenu === false) {
-                window.toggleDropdown(_liElement);
+        function getShareLink() {
+            const fiddleId = getFiddleId();
+
+            if (fiddleId) {
+                return `${window.location.host}?f=${fiddleId}`;
             }
         }
 
-        window.toggleDropdown = function toggleDropdown(liElement) {
-            const menu = liElement.parentElement.querySelector('div.dropdown-menu');
-            menu.classList.toggle('show');
-            if (menu.classList.contains('show')) {
-                _menuOpen = true;
-                _liElement = liElement;
+        let _currentMenu = '';
+        function outsideClickHandler(e) {
+            if (_currentMenu !== '') {
+                let parentIsMenu = hasParentClass(e.target, _currentMenu);
+                if (parentIsMenu === false) {
+                    window.toggleMenu(_currentMenu);
+                }
+            }
+        }
 
+        function showMenu(menuName) {
+            if (menuName === 'share-menu') {
+                const input = document.querySelector('.share-menu input.share-link');
+                input.value = getShareLink();
+            }
+
+            const menu = document.querySelector(`div.dropdown-menu.${menuName}`);
+            menu.classList.toggle('show', true);
+            _currentMenu = menuName;
+        }
+
+        function hideMenu(menuName) {
+            const menu = document.querySelector(`div.dropdown-menu.${menuName}`);
+            menu.classList.toggle('show', false);
+        }
+
+        window.toggleMenu = function toggleMenu(menuName) {
+            if (_currentMenu === menuName) {
+                hideMenu(menuName);
+                document.removeEventListener('click', outsideClickHandler);
+                _currentMenu = '';
+            } else if (_currentMenu === '') {
+                showMenu(menuName);
                 setTimeout(() => {
                     document.addEventListener('click', outsideClickHandler);
                 }, 0);
             } else {
-                _liElement = false;
-                _menuOpen = false;
+                hideMenu(_currentMenu);
                 document.removeEventListener('click', outsideClickHandler);
+
+                showMenu(menuName);
+                setTimeout(() => {
+                    document.addEventListener('click', outsideClickHandler);
+                }, 0);
             }
-        }
+        };
 
         window.toggleTools = function toggleTools() {
             const footer = document.querySelector('.footer-nav');

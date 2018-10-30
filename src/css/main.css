@@ -74,7 +74,7 @@ div.line {
     top: -1.5em;
 }
 
-.settings-menu {
+.settings-menu, .share-menu {
     width: 300px;
 }
 

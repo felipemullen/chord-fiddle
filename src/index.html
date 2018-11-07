@@ -186,6 +186,11 @@
         <!-- TODO: need some ads here -->
     </footer>
 
+    <div id="chord-helper" class="d-none" onmouseover="showChordHelper(this)">
+        <div class="diagram"></div>
+    </div>
+
+
     <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-functions.js"></script>
     <script>
@@ -200,9 +205,13 @@
 
     <script src="./lib/bootstrap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
-    <script src="https://unpkg.com/split.js/split.min.js"></script>
+    <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tonal.min.js?alt=media&token=c280c37d-54c3-4587-a285-bd7dd19c0e4f"></script>
+    <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/svg.min.js?alt=media&token=dae2f0de-6210-4e03-9473-83e9581b402c"></script>
+    <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/split.min.js?alt=media&token=2b35bcdd-c980-48cf-bb09-fcad0ef310b0"></script>
 
     <script src="./js/data-bind.js"></script>
+    <script src="./js/chord-list.js"></script>
+    <script src="./js/chord-generator.js"></script>
     <script src="./js/app.js"></script>
 </body>
 

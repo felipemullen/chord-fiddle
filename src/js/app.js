@@ -8,7 +8,33 @@
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
 
     let splitPanels = null;
+    let _chordHelperElement = null;
     let $scope;
+
+    window.showChordHelper = function showChordHelper(element) {
+        const locationRect = element.getBoundingClientRect();
+        const chord = element.parentElement.getAttribute('data-chord');
+
+        if (chord in ChordList) {
+            const notes = ChordList[chord][0];
+            const target = document.querySelector('#chord-helper .diagram');
+
+            if (target.childElementCount > 0)
+                target.querySelector('svg').remove();
+
+            ChordGraph(target, chord, notes);
+
+            // TODO: Add logic for not within window boundaries
+            _chordHelperElement.style.left = `${locationRect.left}px`;
+            _chordHelperElement.style.top = `${locationRect.bottom}px`;
+
+            _chordHelperElement.classList.toggle('d-none', false);
+        }
+    };
+
+    window.hideChordHelper = function hideChordHelper(element) {
+        _chordHelperElement.classList.toggle('d-none', true);
+    };
 
     /**
      * @param {string} line 
@@ -21,7 +47,10 @@
         if (matches != null) {
             for (const match of matches) {
                 const chord = match.replace(BRACKETS, '');
-                let chordHtml = `<span class="chord" data-chord="${chord}">&nbsp;</span>`;
+                let chordHtml = `
+                    <span class="chord" data-chord="${chord}">
+                        &nbsp;<span class="chord-above" onmouseover="showChordHelper(this)" onmouseout="hideChordHelper()">${chord}</span>
+                    </span>`;
                 result = result.replace(match, chordHtml);
             }
         }
@@ -77,6 +106,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         $scope = Bind.createScope();
+        _chordHelperElement = document.querySelector('#chord-helper');
         $scope.inputBox.onInput = onTextInput;
         $scope.inputBox.onChange = onTextInput;
         $scope.tempo.onChange = () => { modifyTempo(0); };

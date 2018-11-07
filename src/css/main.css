@@ -26,6 +26,8 @@
     --tuner-btn-bg-hover: #0a80ee;
     --tuner-btn-text: #f7f7f7;
     --tuner-btn-play: #ee5a0a;
+    --chord-helper-bg: #f7f7f7;
+    --chord-helper-border: #6d747f;
 }
 
 html, body {
@@ -60,11 +62,7 @@ div.line {
     position: relative;
 }
 
-.chord:before {
-    content: '\0020';
-}
-
-.chord:after {
+.chord-above {
     content: attr(data-chord);
     background-color: var(--preview-chord-bg);
     color: var(--preview-chord-text);
@@ -135,6 +133,17 @@ div.line {
     border-bottom: 1px solid var(--editor-headers-border);
 }
 
+/* Chords */
+
+#chord-helper {
+    position: absolute;
+    /* margin-top: 0.1em; */
+    width: 8em;
+    padding: 0em 1.5em;
+    background-color: var(--chord-helper-bg);
+    border: 1px solid var(--chord-helper-border);
+}
+
 /* Bootstrap Overrides */
 
 .editor-panel .form .form-control {
@@ -173,7 +182,6 @@ div.line {
     position: fixed;
     bottom: 0;
     width: 100%;
-
     border-bottom: none;
     color: var(--footer-text);
     background-color: var(--footer-nav-bg);
@@ -186,7 +194,7 @@ div.line {
     color: var(--footer-text);
 }
 
-.settings.metronome .options input  {
+.settings.metronome .options input {
     /* border: none; */
     width: 70px;
     text-align: center;

@@ -1,124 +1,148 @@
 (function () {
 
-    const SCALE = 1;
     const STRING_COUNT = 6;
     const FRETS = 6;
+    const tuning = ['E', 'A', 'D', 'G', 'B', 'E'];
 
-    const fretWidth = 10 * SCALE;
-    const fretHeight = 13 * SCALE;
-    const stringWidth = 1 * SCALE;
-    const barWidth = 5 * SCALE;
-    const fretLineWidth = 1 * SCALE;
-    const headWidth = (stringWidth * 4);
-    const noteSize = 8 * SCALE;
-    const titleSize = 14 * SCALE;
+    function drawTitle(parentGroup, chartInfo) {
+        let title = parentGroup.text(chartInfo.chord);
+        title.font({ anchor: 'middle', size: chartInfo.titleFontSize });
+        title.move(chartInfo.fretBoardWidth / 2, 0);
+        title.addClass('fretboard-text');
 
-    const _width = (fretWidth * (STRING_COUNT - 1));
-    const _height = (fretHeight * (FRETS - 1));
-
-    function drawTitle(mainGroup, titleText) {
-        let title = mainGroup.text(titleText);
-        title.font({ anchor: 'middle', size: titleSize });
-        title.move(_width / 2, 0);
+        chartInfo.height += title.bbox().h;
     }
 
-    function drawOpenNotes(mainGroup, notes) {
-        let openNotes = mainGroup.group();
+    function drawOpenNotes(parentGroup, chartInfo) {
+        let openNotes = parentGroup.group();
         for (let i = 0; i < STRING_COUNT; i++) {
-            let note = notes[i];
+            let note = chartInfo.notes[i];
             if (note === -1 || note === 0) {
-                let text = note === 0 ? 'o' : 'x';
+                let text = note === 0 ? 'o' : '×';
                 let n = openNotes.text(text);
                 n.font({
                     anchor: 'middle',
-                    size: noteSize
+                    size: chartInfo.noteCircleSize
                 });
-                n.move((i * fretWidth) + (stringWidth / 2), 0);
+                n.move((i * chartInfo.fretWidth) + (chartInfo.stringSize / 2), 0);
+                n.addClass('fretboard-text');
             }
         }
-        openNotes.move(0, titleSize);
+        openNotes.move(0, chartInfo.height);
+        chartInfo.height += openNotes.bbox().h;
     }
 
-    function drawFretBoard(mainGroup, width, height) {
-        const fretBoard = mainGroup.group();
-        fretBoard.rect(width, height).fill('#d6d6d6');
-        fretBoard.move(0, titleSize * 2);
-        return fretBoard;
+    function drawFretBoard(parentGroup, chartInfo) {
+        const fretBoard = parentGroup.group();
+        fretBoard.rect(chartInfo.fretBoardWidth, chartInfo.fretBoardHeight);
+        fretBoard.move(0, chartInfo.height);
+        fretBoard.addClass('fretboard');
+
+        drawFrets(parentGroup, chartInfo);
+        drawStrings(parentGroup, chartInfo);
+        drawNotes(parentGroup, chartInfo);
+
+        chartInfo.height += fretBoard.bbox().h;
+
+        // The last string is drawn from chartInfo.height to the bottom, but
+        // svg.line elements are not counted as height, so we need another increment
+        chartInfo.height += chartInfo.stringSize;
     }
 
-    function drawFrets(fretBoard, headChord) {
-        const fretGroup = fretBoard.group();
-        for (let i = 0; i < FRETS; i++) {
-            const p1 = { x: 0, y: fretHeight * i };
-            const p2 = { x: _width + stringWidth, y: fretHeight * i };
-            const fretLine = fretGroup.line(p1.x, p1.y, p2.x, p2.y);
+    function drawHead(parentGroup, chartInfo) {
+        const size = chartInfo.isHeadChord ? chartInfo.headSize : chartInfo.stringSize;
+        const adjustedY = chartInfo.height + (size / 2);
 
-            if (i === 0) {
-                const head = fretGroup.line(p1.x, p1.y, p2.x, p2.y);
-                if (headChord === true) {
-                    head.stroke({ width: headWidth, color: '#000' });
-                    head.move(0, (-headWidth / 2))
-                } else {
-                    head.stroke({ width: stringWidth, color: '#000' });
-                }
-            } else {
-                fretLine.stroke({
-                    width: fretLineWidth,
-                    color: '#000'
-                });
-            }
+        const head = parentGroup.line(0, adjustedY, chartInfo.fretBoardWidth, adjustedY);
+        head.stroke({ width: size });
+        head.addClass('fretboard-lines');
+
+        chartInfo.height += size;
+    }
+
+    function drawFrets(parentGroup, chartInfo) {
+        const fretGroup = parentGroup.group();
+        for (let i = 1; i < FRETS; i++) {
+
+            const fretY = i * chartInfo.fretHeight + (chartInfo.fretLineSize / 2);
+            const fretLine = fretGroup.line(0, fretY, chartInfo.fretBoardWidth, fretY);
+            fretLine.stroke({ width: chartInfo.fretLineSize });
+            fretLine.addClass('fretboard-lines');
         }
-        // Center along string line
-        fretGroup.move(0, -(fretLineWidth / 2))
-        if (headChord === true)
-            fretGroup.move(0, headWidth - (stringWidth / 2))
+        fretGroup.move(0, chartInfo.height);
     }
 
-    function drawStrings(fretBoard, height) {
+    function drawStrings(fretBoard, chartInfo) {
         const stringGroup = fretBoard.group();
         for (let i = 0; i < STRING_COUNT; i++) {
-            const p1 = { x: i * fretWidth, y: 0 };
-            const p2 = { x: i * fretWidth, y: height };
-            const string = stringGroup.line(p1.x, p1.y, p2.x, p2.y);
-            string.stroke({
-                width: stringWidth,
-                color: '#000'
+            const offset = (i === 0)
+                ? (chartInfo.stringSize / 2)
+                : ((i === STRING_COUNT - 1) ? -(chartInfo.stringSize / 2) : 0);
+
+            const x = i * chartInfo.fretWidth + offset;
+            const string = stringGroup.line(x, 0, x, chartInfo.fretBoardHeight);
+            string.stroke({ width: chartInfo.stringSize });
+            string.addClass('fretboard-lines');
+        }
+        stringGroup.move(0, chartInfo.height);
+    }
+
+    function drawNotes(parentGroup, chartInfo) {
+        let noteGroup = parentGroup.group();
+
+        if (chartInfo.isBarChord) {
+            const startString = chartInfo.notes.indexOf(chartInfo.lowestNonOpen);
+            const x1 = (startString * chartInfo.fretWidth) - (chartInfo.barSize / 4);
+            const x2 = ((STRING_COUNT - 1) * chartInfo.fretWidth) + (chartInfo.barSize / 4);
+            let y = (chartInfo.lowestNonOpen * chartInfo.fretHeight) - (chartInfo.fretHeight / 2);
+
+            const bar = noteGroup.line(x1, y, x2, y);
+            bar.stroke({
+                width: chartInfo.barSize,
+                linecap: 'round'
+            });
+            bar.addClass('fretboard-notes');
+            chartInfo.notes = chartInfo.notes.map((n) => {
+                return (n === chartInfo.lowestNonOpen) ? -1 : n;
             });
         }
-        // Center along line
-        stringGroup.move(stringWidth / 2, 0);
-    }
 
-    function drawNoteBar(noteGroup, notes, lowestNonOpen, headChord) {
-        const start = notes.indexOf(lowestNonOpen);
-        const x1 = (start * fretWidth) - (barWidth / 2);
-        const x2 = ((STRING_COUNT - 1) * fretWidth) + (barWidth / 2);
-        let y = (lowestNonOpen * fretHeight) - (fretHeight / 2);
-
-        if (headChord === true)
-            y += (headWidth) - (stringWidth / 2);
-
-        const bar = noteGroup.line(x1, y, x2, y);
-        bar.stroke({
-            width: barWidth,
-            color: '#000',
-            linecap: 'round'
-        });
-    }
-
-    function drawNotes(noteGroup, notes, headChord) {
         for (let i = 0; i < STRING_COUNT; i++) {
-            let n = notes[i];
+            let n = chartInfo.notes[i];
             if (n > 0) {
-                let note = noteGroup.circle(noteSize);
-                let x = (i * fretWidth + (stringWidth / 2)) - (noteSize / 2);
-                let y = (n * fretHeight) - (fretHeight / 2) - (noteSize / 2);
-                if (headChord === true)
-                    y += (headWidth) - (stringWidth / 2);
+                // x offset is added because strings (svg.line) are center-based and
+                // the edges were drawn a half-width closer to the center
+                const offset = (i === 0)
+                    ? (chartInfo.stringSize / 2)
+                    : ((i === STRING_COUNT - 1) ? -(chartInfo.stringSize / 2) : 0);
+
+                const note = noteGroup.circle(chartInfo.noteCircleSize);
+                const x = (i * chartInfo.fretWidth) - (chartInfo.noteCircleSize / 2) + offset;
+                const y = (n * chartInfo.fretHeight) - (chartInfo.fretHeight / 2) - (chartInfo.noteCircleSize / 2);
+
                 note.move(x, y);
-                note.fill({ color: "#f00" })
+                note.addClass('fretboard-notes');
             }
         }
+
+        noteGroup.move(0, chartInfo.height);
+    }
+
+    function drawStringNames(parentGroup, chartInfo) {
+        const stringNames = parentGroup.group();
+        for (let i = 0; i < tuning.length; i++) {
+            const name = tuning[i];
+            let n = stringNames.text(name);
+            n.font({
+                anchor: 'middle',
+                size: chartInfo.noteCircleSize
+            });
+            n.move((i * chartInfo.fretWidth) + (chartInfo.stringSize / 2), 0);
+            n.addClass('fretboard-text');
+        }
+        // Center along line
+        stringNames.move(0, chartInfo.height);
+        chartInfo.height += stringNames.bbox().h;
     }
 
     function checkBarChord(notes, lowestNonOpen) {
@@ -149,42 +173,57 @@
         return false;
     }
 
+    function getChartInfo(chord, notes) {
+        const lowestNonOpen = notes.reduce((prev, curr) => (curr < prev && curr > 0) ? curr : prev, 50);
+        const isHeadChord = (lowestNonOpen - 1 < 2) ? true : false;
+        const stringSize = 1;
+        const fretWidth = 10;
+        const fretHeight = 12;
+
+        return {
+            chord,
+            notes,
+            stringSize,
+            fretWidth,
+            fretHeight,
+            lowestNonOpen,
+            isHeadChord,
+            fretBoardWidth: (fretWidth * (STRING_COUNT - 1)),
+            fretBoardHeight: (fretHeight * (FRETS - 1)),
+            isBarChord: checkBarChord(notes, lowestNonOpen),
+            barSize: 5,
+            fretLineSize: 1,
+            headSize: (stringSize * 4),
+            noteCircleSize: 7,
+            titleFontSize: 14,
+            height: 0
+        };
+    }
+
     function chordGraph(element, chord, notes) {
 
-        let height = _height;
-        const lowestNonOpen = notes.reduce((prev, curr) => (curr < prev && curr > 0) ? curr : prev, 50);
-
-        const isBarChord = checkBarChord(notes, lowestNonOpen);
-        const headChord = (lowestNonOpen - 1 < 2) ? true : false;
-
-        if (headChord === true)
-            height += headWidth;
+        const chartInfo = getChartInfo(chord, notes);
 
         const canvas = SVG(element);
-        canvas.clear();
         const mainGroup = canvas.group();
 
-        drawTitle(mainGroup, chord);
-        drawOpenNotes(mainGroup, notes);
+        drawTitle(mainGroup, chartInfo);
 
-        const fretBoard = drawFretBoard(mainGroup, _width, height);
+        // Add some extra padding under title
+        chartInfo.height += chartInfo.titleFontSize / 2;
 
-        drawFrets(fretBoard, headChord);
-        drawStrings(fretBoard, height);
+        drawOpenNotes(mainGroup, chartInfo);
+        drawHead(mainGroup, chartInfo);
 
-        let noteGroup = fretBoard.group();
+        drawFretBoard(mainGroup, chartInfo);
 
-        if (isBarChord) {
-            drawNoteBar(noteGroup, notes, lowestNonOpen, headChord);
-            notes = notes.map((n) => {
-                return (n === lowestNonOpen) ? -1 : n;
-            });
-        }
+        // Add some padding before the string names
+        chartInfo.height += chartInfo.noteCircleSize;
 
-        drawNotes(noteGroup, notes, headChord);
+        drawStringNames(mainGroup, chartInfo);
 
-        canvas.viewbox(0, 0, _width + (noteSize) + (barWidth), height + (titleSize * 3))
-        mainGroup.move((noteSize / 2) + (barWidth / 2), 0)
+        const edgePadding = (chartInfo.noteCircleSize / 2) * 2;
+        canvas.viewbox(-edgePadding, 0, chartInfo.fretBoardWidth + edgePadding * 2, chartInfo.height);
     }
 
     window.ChordGraph = window.ChordGraph || chordGraph;

@@ -28,6 +28,10 @@
     --tuner-btn-play: #ee5a0a;
     --chord-helper-bg: #f7f7f7;
     --chord-helper-border: #6d747f;
+    --fretboard-bg: #dadada;
+    --fretboard-lines: #1c2128;
+    --fretboard-notes: #20262e;
+    --fretboard-text: #20262e;
 }
 
 html, body {
@@ -137,11 +141,27 @@ div.line {
 
 #chord-helper {
     position: absolute;
-    /* margin-top: 0.1em; */
     width: 8em;
-    padding: 0em 1.5em;
+    padding: 1em 1.5em;
     background-color: var(--chord-helper-bg);
     border: 1px solid var(--chord-helper-border);
+}
+
+.fretboard {
+    fill: var(--fretboard-bg);
+}
+
+.fretboard-lines {
+    stroke: var(--fretboard-lines);
+}
+
+.fretboard-notes {
+    fill: var(--fretboard-notes);
+    stroke: var(--fretboard-notes);
+}
+
+.fretboard-text {
+    fill: var(--fretboard-text);
 }
 
 /* Bootstrap Overrides */

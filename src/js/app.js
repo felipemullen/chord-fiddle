@@ -11,11 +11,23 @@
     let _chordHelperElement = null;
     let $scope;
 
+    window.chordHelperDragEnd = function (e) {
+        const left = _chordHelperElement.style.left.replace('px', '');
+        const top = _chordHelperElement.style.top.replace('px', '');
+        const x = parseInt(left) + e.offsetX;
+        const y = parseInt(top) + e.offsetY;
+
+        _chordHelperElement.style.left = `${x}px`;
+        _chordHelperElement.style.top = `${y}px`;
+    };
+
     window.showChordHelper = function showChordHelper(element) {
         const locationRect = element.getBoundingClientRect();
         const chord = element.parentElement.getAttribute('data-chord');
 
         if (chord in ChordList) {
+            _chordHelperElement.classList.toggle('d-none', false);
+
             const notes = ChordList[chord][0];
             const target = document.querySelector('#chord-helper .diagram');
 
@@ -27,8 +39,6 @@
             // TODO: Add logic for not within window boundaries
             _chordHelperElement.style.left = `${locationRect.left}px`;
             _chordHelperElement.style.top = `${locationRect.bottom}px`;
-
-            _chordHelperElement.classList.toggle('d-none', false);
         }
     };
 

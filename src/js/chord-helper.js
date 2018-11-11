@@ -9,13 +9,13 @@
             </button>
         </div>
         <div class="diagram"></div>
-        <div class="dropdown-divider"></div>
-        <div class="d-flex justify-content-between p-2">
-            <button class="btn btn-sm btn-light text-muted">
+        <div class="dropdown-divider mb-0"></div>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-light text-muted left-button">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <span class="btn btn-sm text-muted">1 of 16</span>
-            <button class="btn btn-sm btn-light text-muted">
+            <span class="btn btn-sm text-muted index-label">1 of 16</span>
+            <button class="btn btn-sm btn-light text-muted right-button">
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
@@ -30,16 +30,43 @@
             this._wrapperElement.classList.add('chord-helper', 'd-none');
 
             this._diagramElement = this._wrapperElement.querySelector('.diagram');
+            this._leftButton = this._wrapperElement.querySelector('.left-button');
+            this._rightButton = this._wrapperElement.querySelector('.right-button');
+            this._indexLabel = this._wrapperElement.querySelector('.index-label');
+
+            this.attachButtonListeners();
 
             this._chord = chord;
-            this._notes = ChordList[chord][this._chordIndex];
+            this._chordList = ChordList[chord];
 
             this._wrapperElement.style.left = `${x}px`;
             this._wrapperElement.style.top = `${y}px`;
 
             this.attachParent(parent);
+            this.scroll(0);
             this.show();
             this.generateDiagram();
+        }
+
+        updateIndexLabel() {
+            this._indexLabel.innerHTML = `${this._chordIndex + 1} of ${this._chordList.length}`;
+        }
+
+        scroll(offset) {
+            this._chordIndex = (this._chordIndex + offset) % this._chordList.length;
+            if (this._chordIndex < 0)
+                this._chordIndex = this._chordIndex = this._chordList.length - 1;
+
+            this.updateIndexLabel();
+            this.generateDiagram();
+        }
+
+        scrollLeft() { this.scroll(-1); }
+        scrollRight() { this.scroll(1); }
+
+        attachButtonListeners() {
+            this._leftButton.addEventListener('click', this.scrollLeft.bind(this));
+            this._rightButton.addEventListener('click', this.scrollRight.bind(this));
         }
 
         parentMouseOut() {
@@ -71,6 +98,8 @@
         }
 
         generateDiagram() {
+            this._notes = ChordList[this._chord][this._chordIndex];
+
             if (this._diagramElement.childElementCount > 0)
                 this._diagramElement.querySelector('svg').remove();
 

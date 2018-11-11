@@ -140,19 +140,16 @@ div.line {
 
 /* Chords */
 
-#chord-helper {
-    position: absolute;
+.chord-helper {
+    position: fixed;
     width: 9.5em;
     background-color: var(--chord-helper-bg);
     border: 1px solid var(--chord-helper-border);
 }
 
-#chord-helper .diagram {
+.chord-helper .diagram {
     margin-top: -1em;
     padding: 0em 2.5em 0em 2.5em;
-}
-
-.top-btn-wrap {
 }
 
 .top-btn {

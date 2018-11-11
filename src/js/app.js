@@ -9,6 +9,7 @@
 
     let splitPanels = null;
     let _chordHelperElement = null;
+    const activeChords = {};
     let $scope;
 
     window.chordHelperDragEnd = function (e) {
@@ -26,19 +27,10 @@
         const chord = element.parentElement.getAttribute('data-chord');
 
         if (chord in ChordList) {
-            _chordHelperElement.classList.toggle('d-none', false);
-
-            const notes = ChordList[chord][0];
-            const target = document.querySelector('#chord-helper .diagram');
-
-            if (target.childElementCount > 0)
-                target.querySelector('svg').remove();
-
-            ChordGraph(target, chord, notes);
-
-            // TODO: Add logic for not within window boundaries
-            _chordHelperElement.style.left = `${locationRect.left}px`;
-            _chordHelperElement.style.top = `${locationRect.bottom}px`;
+            if (activeChords[chord] === undefined)
+                activeChords[chord] = new ChordHelper({ chord, x: locationRect.left, y: locationRect.bottom, parent: element });
+            else
+                activeChords[chord].move({ x: locationRect.left, y: locationRect.bottom, parent: element });
         }
     };
 
@@ -59,7 +51,7 @@
                 const chord = match.replace(BRACKETS, '');
                 let chordHtml = `
                     <span class="chord" data-chord="${chord}">
-                        &nbsp;<span class="chord-above" onmouseover="showChordHelper(this)" onmouseout="hideChordHelper()">${chord}</span>
+                        &nbsp;<span class="chord-above" onmouseover="showChordHelper(this)">${chord}</span>
                     </span>`;
                 result = result.replace(match, chordHtml);
             }
@@ -325,5 +317,7 @@
                 _metronomeIsOn = true;
             }
         };
+
+        // let temp = new ChordHelper({ chord: 'D', x: 500, y: 200 });
     });
 })();

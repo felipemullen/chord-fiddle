@@ -27,6 +27,8 @@
     --tuner-btn-text: #f7f7f7;
     --tuner-btn-play: #ee5a0a;
     --chord-helper-bg: #f7f7f7;
+    --chord-helper-pinned: #ee5a0a;
+    --chord-helper-pinned-text: #f7f7f7;
     --chord-helper-border: #6d747f;
     --chord-helper-border: #6d747f;
     --fretboard-bg: #dadada;
@@ -145,6 +147,11 @@ div.line {
     width: 9.5em;
     background-color: var(--chord-helper-bg);
     border: 1px solid var(--chord-helper-border);
+}
+
+.chord-helper button.pinned {
+    background-color: var(--chord-helper-pinned);
+    color: var(--chord-helper-pinned-text);
 }
 
 .chord-helper .diagram {

@@ -22,7 +22,11 @@
         _chordHelperElement.style.top = `${y}px`;
     };
 
+    let preventParse = false;
     window.showChordHelper = function showChordHelper(element) {
+        preventParse = true;
+        $scope.inputBox._element.blur();
+
         const locationRect = element.getBoundingClientRect();
         const chord = element.parentElement.getAttribute('data-chord');
 
@@ -32,6 +36,8 @@
             else
                 activeChords[chord].move({ x: locationRect.left, y: locationRect.bottom, parent: element });
         }
+
+        preventParse = false;
     };
 
     window.hideChordHelper = function hideChordHelper(element) {
@@ -266,6 +272,9 @@
 
         let _delayedInputHandler = null;
         function onTextInput(textAreaElement) {
+            if (preventParse === true)
+                return;
+
             if (_delayedInputHandler != null) {
                 clearTimeout(_delayedInputHandler);
             }

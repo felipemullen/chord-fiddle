@@ -4,7 +4,7 @@
             <button class="top-btn btn btn-sm btn-light text-muted">
                 <i class="fas fa-arrows-alt"></i>
             </button>
-            <button class="top-btn btn btn-sm btn-light text-muted">
+            <button class="top-btn btn btn-sm btn-light pin-chord">
                 <i class="fas fa-thumbtack"></i>
             </button>
         </div>
@@ -24,12 +24,14 @@
     class ChordHelper {
         constructor({ chord, x, y, parent }) {
             this._chordIndex = 0;
+            this._isPinned = false;
 
             this._wrapperElement = document.createElement('div');
             this._wrapperElement.innerHTML = template;
             this._wrapperElement.classList.add('chord-helper', 'd-none');
 
             this._diagramElement = this._wrapperElement.querySelector('.diagram');
+            this._pinButton = this._wrapperElement.querySelector('.pin-chord');
             this._leftButton = this._wrapperElement.querySelector('.left-button');
             this._rightButton = this._wrapperElement.querySelector('.right-button');
             this._indexLabel = this._wrapperElement.querySelector('.index-label');
@@ -64,14 +66,18 @@
         scrollLeft() { this.scroll(-1); }
         scrollRight() { this.scroll(1); }
 
+        togglePin() {
+            this._isPinned = !this._isPinned;
+            this._pinButton.classList.toggle('pinned');
+        }
+
         attachButtonListeners() {
             this._leftButton.addEventListener('click', this.scrollLeft.bind(this));
             this._rightButton.addEventListener('click', this.scrollRight.bind(this));
+            this._pinButton.addEventListener('click', this.togglePin.bind(this));
         }
 
         parentMouseOut() {
-            // TODO: Check if it is not pinned, hide as needed
-            console.log(`mouseOut fired`);
             this.hide();
         }
 
@@ -125,7 +131,9 @@
         }
 
         hide() {
-            this._wrapperElement.classList.toggle('d-none', true);
+            if (this._isPinned === false) {
+                this._wrapperElement.classList.toggle('d-none', true);
+            }
         }
     }
 

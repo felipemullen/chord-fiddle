@@ -9,8 +9,9 @@
 
     const SPLIT_PANELS = ['#metadata', '#song', '#preview'];
     const SPLIT_GUTTER_SIZE = 10;
-    let splitPanels = null;
     let _chordHelperElement = null;
+    let splitPanels = null;
+    let panelStates = {};
     const activeChords = {};
     let $scope;
 
@@ -141,24 +142,6 @@
         });
     }
 
-    window.expandPreviewPanel = function expandPreviewPanel() {
-        document.querySelector('#metadata').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#song').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#preview').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
-    }
-
-    window.expandSongPanel = function expandSongPanel() {
-        document.querySelector('#metadata').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#song').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#preview').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-    }
-
-    window.expandMetadataPanel = function expandMetadataPanel() {
-        document.querySelector('#metadata').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#song').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-        document.querySelector('#preview').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
         $scope = Bind.createScope();
         _chordHelperElement = document.querySelector('#chord-helper');
@@ -173,7 +156,9 @@
                 .then((result) => {
                     loadFiddle(result);
                     showLoading(false);
-                    expandPreviewPanel();
+
+                    const data = { target: { getAttribute: () => '#preview' } }
+                    resizeGutter(data);
                 })
                 .catch(loadError);
         } else {

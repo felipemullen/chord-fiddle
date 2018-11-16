@@ -168,7 +168,7 @@
 
         /**
          * This function exists to correct the mouse offset problem
-         * @param { MouseEvent } e 
+         * @param { MouseEvent } event
          */
         onMouseDown(event) {
             if (this._isPinned) {

@@ -7,6 +7,8 @@
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
 
+    const SPLIT_PANELS = ['#metadata', '#song', '#preview'];
+    const SPLIT_GUTTER_SIZE = 10;
     let splitPanels = null;
     let _chordHelperElement = null;
     const activeChords = {};
@@ -91,6 +93,21 @@
             return element.parentNode != null && hasParentClass(element.parentNode, className);
     }
 
+    function resizeGutter(event) {
+        const panels = document.querySelectorAll('.editor-panel');
+        for (const panel of panels)
+            panel.style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+
+        const targetPanelId = event.target.getAttribute('data-panel');
+        const targetPanel = document.querySelector(targetPanelId);
+        targetPanel.style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+    }
+
+    function toggleTransitions() {
+        document.querySelectorAll('.editor-panel')
+            .forEach(x => x.classList.toggle('no-transition'));
+    }
+
     function showLoading(isLoading) {
         $scope.loadingSpinner.toggleClass('hide', !isLoading);
         $scope.editorWrapper.toggleClass('hide', isLoading);
@@ -99,17 +116,47 @@
             splitPanels.destroy();
         }
 
-        splitPanels = Split(['#metadata', '#song', '#preview'], {
+        splitPanels = Split(SPLIT_PANELS, {
             elementStyle: (dimension, size, gutterSize) => ({
                 'flex-basis': `calc(${size}% - ${gutterSize}px)`,
             }),
             gutterStyle: (dimension, gutterSize) => ({
                 'flex-basis': `${gutterSize}px`,
             }),
-            gutterSize: 10,
+            onDragStart: toggleTransitions,
+            onDragEnd: toggleTransitions,
+            gutter: (index, direction) => {
+                const panel = SPLIT_PANELS[index];
+                const gutter = document.createElement('div');
+
+                gutter.className = `gutter gutter-${direction}`;
+                gutter.setAttribute('data-panel', panel);
+                gutter.addEventListener('dblclick', resizeGutter);
+
+                return gutter;
+            },
+            gutterSize: SPLIT_GUTTER_SIZE,
             minSize: 0,
             cursor: 'ew-resize'
         });
+    }
+
+    window.expandPreviewPanel = function expandPreviewPanel() {
+        document.querySelector('#metadata').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#song').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#preview').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+    }
+
+    window.expandSongPanel = function expandSongPanel() {
+        document.querySelector('#metadata').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#song').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#preview').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+    }
+
+    window.expandMetadataPanel = function expandMetadataPanel() {
+        document.querySelector('#metadata').style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#song').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+        document.querySelector('#preview').style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -126,7 +173,7 @@
                 .then((result) => {
                     loadFiddle(result);
                     showLoading(false);
-                    // TODO: resize panels to show preview only
+                    expandPreviewPanel();
                 })
                 .catch(loadError);
         } else {

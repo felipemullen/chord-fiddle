@@ -45,6 +45,10 @@ html, body {
     display: none !important;
 }
 
+.no-transition {
+    transition: none !important;
+}
+
 .slide-zero {
     transform: translateY(0) !important;
     transition: transform 200ms ease-in-out;
@@ -84,6 +88,10 @@ div.line {
 }
 
 /* Editor */
+
+.editor-panel {
+    transition: all 200ms ease-in-out;
+}
 
 .editor>.editor-panel:first-child {
     border-left: 10px solid var(--gutters);

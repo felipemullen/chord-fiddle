@@ -132,15 +132,32 @@
                 this.attachParent(parent);
             }
 
-            // TODO: Add logic for not within window boundaries
             this._wrapperElement.style.left = `${x}px`;
             this._wrapperElement.style.top = `${y}px`;
 
             this.show();
         }
 
+        ensureWithinWindow() {
+            const bounds = document.body.getBoundingClientRect()
+            const elementRect = this._wrapperElement.getBoundingClientRect();
+
+            if (elementRect.right >= bounds.right)
+                this._wrapperElement.style.left = `${bounds.right - elementRect.width}px`;
+
+            if (elementRect.left <= 0)
+                this._wrapperElement.style.left = '0px';
+
+            if (elementRect.bottom >= bounds.bottom)
+                this._wrapperElement.style.top = `${bounds.bottom - elementRect.height}px`;
+
+            if (elementRect.top <= 0)
+                this._wrapperElement.style.top = '0px';
+        }
+
         show() {
             this._wrapperElement.classList.toggle('d-none', false);
+            this.ensureWithinWindow();
         }
 
         hide() {

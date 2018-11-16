@@ -144,6 +144,7 @@ div.line {
 
 .chord-helper {
     position: fixed;
+    z-index: 1000;
     width: 9.5em;
     background-color: var(--chord-helper-bg);
     border: 1px solid var(--chord-helper-border);

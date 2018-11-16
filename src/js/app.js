@@ -98,14 +98,14 @@
         const targetPanelId = event.target.getAttribute('data-panel');
         const targetPanel = document.querySelector(targetPanelId);
         const currentSize = _panelStates[targetPanelId];
-        
+
         // Expand if less than a third, collapse otherwise
         if (currentSize <= 33.3) {
             document.querySelectorAll('.editor-panel').forEach(panel => {
                 panel.style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
                 _panelStates[`#${panel.id}`] = 10;
             });
-            
+
             targetPanel.style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
             _panelStates[targetPanelId] = 80;
         } else {
@@ -121,10 +121,7 @@
             .forEach(x => x.classList.toggle('no-transition'));
     }
 
-    function showLoading(isLoading) {
-        $scope.loadingSpinner.toggleClass('hide', !isLoading);
-        $scope.editorWrapper.toggleClass('hide', isLoading);
-
+    function createSplitPanels() {
         if (_splitPanels !== null) {
             _splitPanels.destroy();
         }
@@ -155,6 +152,11 @@
         });
     }
 
+    function showLoading(isLoading) {
+        $scope.loadingSpinner.toggleClass('hide', !isLoading);
+        $scope.editorWrapper.toggleClass('hide', isLoading);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         $scope = Bind.createScope();
         _chordHelperElement = document.querySelector('#chord-helper');
@@ -169,6 +171,7 @@
                 .then((result) => {
                     loadFiddle(result);
                     showLoading(false);
+                    createSplitPanels();
 
                     const data = { target: { getAttribute: () => '#preview' } }
                     resizeGutter(data);
@@ -176,6 +179,7 @@
                 .catch(loadError);
         } else {
             showLoading(false);
+            createSplitPanels();
         }
 
         function getFiddleId() {
@@ -218,15 +222,20 @@
                 tempo: $scope.tempo.value
             };
 
-            if (id) {
-                updateFiddle({ id, fiddle })
-                    .then(loadFiddle)
-                    .catch(loadError);
-            } else {
-                createFiddle(fiddle)
-                    .then(loadFiddle)
-                    .catch(loadError);
-            }
+            showLoading(true);
+
+            const loadPromise = (id)
+                ? updateFiddle({ id, fiddle })
+                : createFiddle(fiddle);
+
+            loadPromise.then(data => {
+                loadFiddle(data);
+                showLoading(false);
+                createSplitPanels();
+
+                const e = { target: { getAttribute: () => '#preview' } }
+                resizeGutter(e);
+            }).catch(loadError);
         };
 
         window.newFiddle = function newFiddle() {

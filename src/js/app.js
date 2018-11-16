@@ -1,7 +1,7 @@
 (function () {
 
     const TIMEOUT_MS = 400;
-    const CHORD_REGEX = /\[[A-G]m*(sus)*(maj)*4*#*7*\]/g;
+    const CHORD_REGEX = /\[[A-G]m*(sus)*(dim)*(maj)*4*#*7*\]/g;
     const BRACKETS = /\[|\]/g;
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
@@ -12,15 +12,9 @@
     const activeChords = {};
     let $scope;
 
-    window.chordHelperDragEnd = function (e) {
-        const left = _chordHelperElement.style.left.replace('px', '');
-        const top = _chordHelperElement.style.top.replace('px', '');
-        const x = parseInt(left) + e.offsetX;
-        const y = parseInt(top) + e.offsetY;
-
-        _chordHelperElement.style.left = `${x}px`;
-        _chordHelperElement.style.top = `${y}px`;
-    };
+    function onChordPinned(chordHelper) {
+        delete activeChords[chordHelper._chord];
+    }
 
     let preventParse = false;
     window.showChordHelper = function showChordHelper(element) {
@@ -32,7 +26,13 @@
 
         if (chord in ChordList) {
             if (activeChords[chord] === undefined)
-                activeChords[chord] = new ChordHelper({ chord, x: locationRect.left, y: locationRect.bottom, parent: element });
+                activeChords[chord] = new ChordHelper({
+                    chord,
+                    x: locationRect.left,
+                    y: locationRect.bottom,
+                    parent: element,
+                    pinCallback: onChordPinned
+                });
             else
                 activeChords[chord].move({ x: locationRect.left, y: locationRect.bottom, parent: element });
         }
@@ -326,7 +326,5 @@
                 _metronomeIsOn = true;
             }
         };
-
-        // let temp = new ChordHelper({ chord: 'D', x: 500, y: 200 });
     });
 })();

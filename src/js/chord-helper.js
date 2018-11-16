@@ -1,7 +1,7 @@
 (function () {
     const template = `
         <div class="top-btn-wrap d-flex justify-content-between">
-            <button class="top-btn btn btn-sm btn-light text-muted">
+            <button class="invisible top-btn btn btn-sm btn-light text-muted move-chord">
                 <i class="fas fa-arrows-alt"></i>
             </button>
             <button class="top-btn btn btn-sm btn-light pin-chord">
@@ -22,15 +22,22 @@
     `;
 
     class ChordHelper {
-        constructor({ chord, x, y, parent }) {
+        constructor({ chord, x, y, parent, pinCallback }) {
             this._chordIndex = 0;
+            this._mouseOffsetX = 0;
+            this._mouseOffsetY = 0;
             this._isPinned = false;
+            this._pinCallback = pinCallback;
 
             this._wrapperElement = document.createElement('div');
             this._wrapperElement.innerHTML = template;
             this._wrapperElement.classList.add('chord-helper', 'd-none');
+            this._wrapperElement.draggable = true;
+            this._wrapperElement.onmousedown = this.onMouseDown.bind(this);
+            this._wrapperElement.ondragend = this.onDragEnd.bind(this);
 
             this._diagramElement = this._wrapperElement.querySelector('.diagram');
+            this._moveButton = this._wrapperElement.querySelector('.move-chord');
             this._pinButton = this._wrapperElement.querySelector('.pin-chord');
             this._leftButton = this._wrapperElement.querySelector('.left-button');
             this._rightButton = this._wrapperElement.querySelector('.right-button');
@@ -67,8 +74,20 @@
         scrollRight() { this.scroll(1); }
 
         togglePin() {
+            // When toggling pin off from a chord already pinned, remove the element
+            if (this._isPinned === true) {
+                this._wrapperElement.remove();
+                return;
+            }
+
             this._isPinned = !this._isPinned;
+            this._moveButton.classList.toggle('invisible');
             this._pinButton.classList.toggle('pinned');
+
+            this.onDragEnd({ offsetX: 0, offsetY: 0 });
+
+            if (this._pinCallback)
+                this._pinCallback(this);
         }
 
         attachButtonListeners() {
@@ -96,7 +115,7 @@
         attachParent(parent) {
             console.log(`attaching parent listener`);
 
-            this.detachParent(parent);
+            this.detachParent();
 
             parent.append(this._wrapperElement);
             parent.addEventListener('mouseleave', this.parentMouseOut.bind(this));
@@ -115,13 +134,12 @@
         move({ x, y, parent }) {
             if (this._parent !== parent) {
                 console.log(`moving parent listener`);
-
-                // TODO: Add logic for not within window boundaries
-                this._wrapperElement.style.left = `${x}px`;
-                this._wrapperElement.style.top = `${y}px`;
-
                 this.attachParent(parent);
             }
+
+            // TODO: Add logic for not within window boundaries
+            this._wrapperElement.style.left = `${x}px`;
+            this._wrapperElement.style.top = `${y}px`;
 
             this.show();
         }
@@ -134,6 +152,27 @@
             if (this._isPinned === false) {
                 this._wrapperElement.classList.toggle('d-none', true);
             }
+        }
+
+        /**
+         * This function exists to correct the mouse offset problem
+         * @param { MouseEvent } e 
+         */
+        onMouseDown(event) {
+            if (this._isPinned) {
+                this._mouseOffsetX = event.clientX - this._wrapperElement.getBoundingClientRect().left;
+                this._mouseOffsetY = event.clientY - this._wrapperElement.getBoundingClientRect().top;
+            }
+        }
+
+        onDragEnd(event) {
+            const left = parseInt(this._wrapperElement.style.left.replace('px', ''));
+            const top = parseInt(this._wrapperElement.style.top.replace('px', ''));
+
+            let x = left + event.offsetX - this._mouseOffsetX;
+            let y = top + event.offsetY - this._mouseOffsetY;
+
+            this.move({ x, y, parent: document.body });
         }
     }
 

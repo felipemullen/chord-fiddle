@@ -9,14 +9,14 @@
 
     const SPLIT_PANELS = ['#metadata', '#song', '#preview'];
     const SPLIT_GUTTER_SIZE = 10;
+    const _activeChords = {};
     let _chordHelperElement = null;
-    let splitPanels = null;
-    let panelStates = {};
-    const activeChords = {};
+    let _splitPanels = null;
+    let _panelStates = {};
     let $scope;
 
     function onChordPinned(chordHelper) {
-        delete activeChords[chordHelper._chord];
+        delete _activeChords[chordHelper._chord];
     }
 
     let preventParse = false;
@@ -28,8 +28,8 @@
         const chord = element.parentElement.getAttribute('data-chord');
 
         if (chord in ChordList) {
-            if (activeChords[chord] === undefined)
-                activeChords[chord] = new ChordHelper({
+            if (_activeChords[chord] === undefined)
+                _activeChords[chord] = new ChordHelper({
                     chord,
                     x: locationRect.left,
                     y: locationRect.bottom,
@@ -37,7 +37,7 @@
                     pinCallback: onChordPinned
                 });
             else
-                activeChords[chord].popup({ x: locationRect.left, y: locationRect.bottom, parent: element });
+                _activeChords[chord].popup({ x: locationRect.left, y: locationRect.bottom, parent: element });
         }
 
         preventParse = false;
@@ -113,11 +113,11 @@
         $scope.loadingSpinner.toggleClass('hide', !isLoading);
         $scope.editorWrapper.toggleClass('hide', isLoading);
 
-        if (splitPanels !== null) {
-            splitPanels.destroy();
+        if (_splitPanels !== null) {
+            _splitPanels.destroy();
         }
 
-        splitPanels = Split(SPLIT_PANELS, {
+        _splitPanels = Split(SPLIT_PANELS, {
             elementStyle: (dimension, size, gutterSize) => ({
                 'flex-basis': `calc(${size}% - ${gutterSize}px)`,
             }),

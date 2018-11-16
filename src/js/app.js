@@ -95,13 +95,25 @@
     }
 
     function resizeGutter(event) {
-        const panels = document.querySelectorAll('.editor-panel');
-        for (const panel of panels)
-            panel.style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
-
         const targetPanelId = event.target.getAttribute('data-panel');
         const targetPanel = document.querySelector(targetPanelId);
-        targetPanel.style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+        const currentSize = _panelStates[targetPanelId];
+        
+        // Expand if less than a third, collapse otherwise
+        if (currentSize <= 33.3) {
+            document.querySelectorAll('.editor-panel').forEach(panel => {
+                panel.style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
+                _panelStates[`#${panel.id}`] = 10;
+            });
+            
+            targetPanel.style.flexBasis = `calc(${80}% - ${SPLIT_GUTTER_SIZE}px)`;
+            _panelStates[targetPanelId] = 80;
+        } else {
+            document.querySelectorAll('.editor-panel').forEach(panel => {
+                panel.style.flexBasis = `calc(${33.3}% - ${SPLIT_GUTTER_SIZE}px)`;
+                _panelStates[`#${panel.id}`] = 33.3;
+            });
+        }
     }
 
     function toggleTransitions() {
@@ -128,6 +140,7 @@
             onDragEnd: toggleTransitions,
             gutter: (index, direction) => {
                 const panel = SPLIT_PANELS[index];
+                _panelStates[panel] = 33.3;
                 const gutter = document.createElement('div');
 
                 gutter.className = `gutter gutter-${direction}`;

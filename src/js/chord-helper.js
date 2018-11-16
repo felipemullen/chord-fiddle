@@ -1,12 +1,12 @@
 (function () {
     const template = `
         <div class="top-btn-wrap d-flex justify-content-between">
-            <button class="invisible top-btn btn btn-sm btn-light text-muted move-chord">
+            <a><button class="invisible top-btn btn btn-sm btn-light text-muted move-chord">
                 <i class="fas fa-arrows-alt"></i>
-            </button>
-            <button class="top-btn btn btn-sm btn-light pin-chord">
+            </button></a>
+            <a><button class="top-btn btn btn-sm btn-light pin-chord">
                 <i class="fas fa-thumbtack"></i>
-            </button>
+            </button></a>
         </div>
         <div class="diagram"></div>
         <div class="dropdown-divider mb-0"></div>

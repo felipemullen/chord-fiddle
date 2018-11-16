@@ -102,8 +102,6 @@
 
         detachParent() {
             if (this._parent) {
-                console.log(`removing parent listener`);
-
                 this._parent.removeEventListener('mouseleave', this.parentMouseOut);
                 this._parent = null;
             }
@@ -113,8 +111,6 @@
          * @param { HTMLElement } parent
          */
         attachParent(parent) {
-            console.log(`attaching parent listener`);
-
             this.detachParent();
 
             parent.append(this._wrapperElement);
@@ -133,7 +129,6 @@
 
         move({ x, y, parent }) {
             if (this._parent !== parent) {
-                console.log(`moving parent listener`);
                 this.attachParent(parent);
             }
 

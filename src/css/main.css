@@ -93,10 +93,6 @@ div.line {
     transition: all 200ms ease-in-out;
 }
 
-.editor>.editor-panel:first-child {
-    border-left: 10px solid var(--gutters);
-}
-
 .editor .editor-panel, .editor .editor-panel textarea {
     overflow: hidden;
     background-color: var(--editor-body);

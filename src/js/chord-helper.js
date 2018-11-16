@@ -34,7 +34,7 @@
             this._wrapperElement.classList.add('chord-helper', 'd-none');
             this._wrapperElement.draggable = true;
             this._wrapperElement.onmousedown = this.onMouseDown.bind(this);
-            this._wrapperElement.ondragend = this.onDragEnd.bind(this);
+            this._wrapperElement.ondragend = this.moveEvent.bind(this);
 
             this._diagramElement = this._wrapperElement.querySelector('.diagram');
             this._moveButton = this._wrapperElement.querySelector('.move-chord');
@@ -84,7 +84,7 @@
             this._moveButton.classList.toggle('invisible');
             this._pinButton.classList.toggle('pinned');
 
-            this.onDragEnd({ offsetX: 0, offsetY: 0 });
+            this.moveEvent({ offsetX: 0, offsetY: 0 });
 
             if (this._pinCallback)
                 this._pinCallback(this);
@@ -127,7 +127,7 @@
             ChordGraph(this._diagramElement, this._chord, this._notes);
         }
 
-        move({ x, y, parent }) {
+        popup({ x, y, parent }) {
             if (this._parent !== parent) {
                 this.attachParent(parent);
             }
@@ -160,14 +160,14 @@
             }
         }
 
-        onDragEnd(event) {
+        moveEvent(event) {
             const left = parseInt(this._wrapperElement.style.left.replace('px', ''));
             const top = parseInt(this._wrapperElement.style.top.replace('px', ''));
 
             let x = left + event.offsetX - this._mouseOffsetX;
             let y = top + event.offsetY - this._mouseOffsetY;
 
-            this.move({ x, y, parent: document.body });
+            this.popup({ x, y, parent: document.body });
         }
     }
 

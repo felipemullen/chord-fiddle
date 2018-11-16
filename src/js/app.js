@@ -34,7 +34,7 @@
                     pinCallback: onChordPinned
                 });
             else
-                activeChords[chord].move({ x: locationRect.left, y: locationRect.bottom, parent: element });
+                activeChords[chord].popup({ x: locationRect.left, y: locationRect.bottom, parent: element });
         }
 
         preventParse = false;

@@ -26,12 +26,12 @@
         <a class="navbar-brand" href="#"></a>
         <ul class="navbar-nav">
             <li id="tut-save" class="nav-item active">
-                <a class="nav-link" href="javascript:;" onclick="saveFiddle()">
+                <a class="nav-link" href="javascript:;" onclick="saveFiddle()" title="Save this Chord Fiddle">
                     <i class="fas fa-fw fa-cloud-upload-alt"></i>&nbsp;<span bind="saveButton">Save</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="javascript:;" onclick="newFiddle()">
+                <a class="nav-link" href="javascript:;" onclick="newFiddle()" title="Create a new Chord Fiddle">
                     <i class="far fa-fw fa-edit"></i>New
                 </a>
             </li>
@@ -39,12 +39,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a id="tut-tools" title="Open Tools" href="javascript:toggleTools();" class="nav-link">
+                <a id="tut-tools" title="Open Tools" href="javascript:toggleTools();" class="nav-link" title="Open Tools">
                     <i class="fas fa-hammer"></i>
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a id="tut-share" title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');">
+                <a id="tut-share" title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');" title="Share this Chord Fiddle">
                     <i class="fas fa-fw fa-share-alt"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right share-menu">
@@ -61,7 +61,7 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a href="javascript:;" class="nav-link" onclick="toggleMenu('settings-menu');">
+                <a href="javascript:;" class="nav-link" onclick="toggleMenu('settings-menu');" title="App Settings">
                     <i class="fa fa-fw fa-cog"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right settings-menu">
@@ -89,13 +89,12 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="javascript:;" class="nav-link">
-                    <!-- TODO: bugs/feature requests -->
-                    <i class="fab fa-github"></i>
+                <a class="nav-link" href="https://github.com/felipemullen/chord-fiddle-issues/issues" target="_blank" title="Bug Reports and Feature Requests">
+                    <i class="fas fa-bug"></i>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="javascript:showTutorials();" class="nav-link">
+                <a href="javascript:showTutorials();" class="nav-link" title="Replay Tutorial">
                     <i class="fas fa-question-circle"></i>
                 </a>
             </li>

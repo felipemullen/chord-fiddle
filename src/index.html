@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/introjs.min.css?alt=media&token=1552054b-547e-4105-a16b-0e5b45703787">
     <link rel="stylesheet" href="./css/bootstrap-switches.css">
     <link rel="stylesheet" href="./css/main.css">
 
@@ -24,7 +25,7 @@
         <a class="navbar-brand" href="">Chord Fiddle</a>
         <a class="navbar-brand" href="#"></a>
         <ul class="navbar-nav">
-            <li class="nav-item active">
+            <li id="tut-save" class="nav-item active">
                 <a class="nav-link" href="javascript:;" onclick="saveFiddle()">
                     <i class="fas fa-fw fa-cloud-upload-alt"></i>&nbsp;<span bind="saveButton">Save</span>
                 </a>
@@ -38,12 +39,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a title="Open Tools" href="javascript:toggleTools();" class="nav-link">
+                <a id="tut-tools" title="Open Tools" href="javascript:toggleTools();" class="nav-link">
                     <i class="fas fa-hammer"></i>
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');">
+                <a id="tut-share" title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');">
                     <i class="fas fa-fw fa-share-alt"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right share-menu">
@@ -93,6 +94,11 @@
                     <i class="fab fa-github"></i>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="javascript:showTutorials();" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </li>
         </ul>
     </nav>
 
@@ -128,11 +134,9 @@
                 </div>
             </div>
             <div id="song" class="flex-grow-1 d-flex flex-column editor-panel no-wrap">
-                <h5 class="panel-header mb-0">Song</h5>
-                <div class="d-flex flex-column" style="flex:1;">
-                    <div class="d-flex" style="flex:1;">
-                        <textarea bind="inputBox" class="no-wrap borderless" style="flex:1;" placeholder="Start typing here"></textarea>
-                    </div>
+                <h5 id="tut-song" class="panel-header mb-0">Song</h5>
+                <div class="flex-grow-1 d-flex flex-column">
+                    <textarea bind="inputBox" class="flex-grow-1 no-wrap borderless" placeholder="Start typing here"></textarea>
                 </div>
             </div>
             <div id="preview" class="flex-grow-1 d-flex flex-column editor-panel">
@@ -203,12 +207,14 @@
     <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tonal.min.js?alt=media&token=c280c37d-54c3-4587-a285-bd7dd19c0e4f"></script>
     <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/svg.min.js?alt=media&token=dae2f0de-6210-4e03-9473-83e9581b402c"></script>
     <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/split.min.js?alt=media&token=2b35bcdd-c980-48cf-bb09-fcad0ef310b0"></script>
+    <script src="https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/intro.min.js?alt=media&token=71246e3f-b833-43ea-8ae4-7b3752f6d871"></script>
 
     <script src="./js/data-bind.js"></script>
     <script src="./js/chord-list.js"></script>
     <script src="./js/chord-generator.js"></script>
     <script src="./js/chord-helper.js"></script>
     <script src="./js/app.js"></script>
+    <script src="./js/tutorials.js"></script>
 </body>
 
 </html>

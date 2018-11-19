@@ -30,7 +30,6 @@
     --chord-helper-pinned: #ee5a0a;
     --chord-helper-pinned-text: #f7f7f7;
     --chord-helper-border: #6d747f;
-    --chord-helper-border: #6d747f;
     --fretboard-bg: #dadada;
     --fretboard-lines: #1c2128;
     --fretboard-notes: #20262e;
@@ -95,8 +94,13 @@ div.line {
 }
 
 .editor .editor-panel, .editor .editor-panel textarea {
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--editor-body);
+}
+
+.editor-panel textarea {
+    line-height: 2.2em;
 }
 
 .editor .editor-panel h5 {
@@ -123,20 +127,20 @@ div.line {
     white-space: nowrap;
 }
 
-.editor textarea::-webkit-scrollbar-corner {
-    background-color: var(--primary);
+.editor *::-webkit-scrollbar-corner {
+    background-color: var(--editor-body);
 }
 
-.editor textarea::-webkit-scrollbar-track-piece {
-    background-color: var(--primary);
+.editor *::-webkit-scrollbar-track-piece {
+    background-color: var(--editor-body);
 }
 
-.editor textarea::-webkit-scrollbar-thumb {
-    background-color: var(--secondary);
+.editor *::-webkit-scrollbar-thumb {
+    background-color: var(--editor-form);
 }
 
-.editor textarea::-webkit-scrollbar {
-    background-color: var(--primary);
+.editor *::-webkit-scrollbar {
+    background-color: var(--editor-body);
 }
 
 .editor .panel-header {
@@ -186,7 +190,13 @@ div.line {
     fill: var(--fretboard-text);
 }
 
-/* Bootstrap Overrides */
+.editor-panel#metadata {
+    overflow-x: auto;
+}
+
+.editor-panel .form {
+    min-width: 250px;
+}
 
 .editor-panel .form .form-control {
     border: none;

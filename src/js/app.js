@@ -1,7 +1,7 @@
 (function () {
 
     const TIMEOUT_MS = 400;
-    const CHORD_REGEX = /\[[A-G]m*(sus)*(dim)*(maj)*4*#*7*\]/g;
+    const CHORD_REGEX = /\[[A-G]7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
     const BRACKETS = /\[|\]/g;
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');

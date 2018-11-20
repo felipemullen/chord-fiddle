@@ -3,6 +3,14 @@
     const TIMEOUT_MS = 400;
     const CHORD_REGEX = /\[[A-G]7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
     const BRACKETS = /\[|\]/g;
+    const EXAMPLE_SONG = `Today is gonna be the day \nthat they're gonna throw it back to you`;
+    const EXAMPLE_CHORDS = [
+        { position: 0, input: '[Em7]' },
+        { position: 14, input: '[G]' },
+        { position: 48, input: '[Dsus4]' },
+        { position: 78, input: '[A7sus4]' }
+    ];
+    const EXAMPLE_SONG_CHORDS = `[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you`;
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
@@ -154,12 +162,67 @@
         $scope.editorWrapper.toggleClass('hide', isLoading);
     }
 
+    let boxIsEmpty = false;
+    let typeTimer = null;
+    let charTimer = null;
+    function onTutorialChange(index, element) {
+        const previewChangeData = { target: { getAttribute: () => '#preview' } }
+        switch (index) {
+            case 0:
+                if ($scope.inputBox.value === '') {
+                    boxIsEmpty = true;
+                    const inputData = EXAMPLE_SONG;
+                    typeTimer = typeCharacters($scope.inputBox, inputData);
+                }
+                break;
+            case 1:
+                if (boxIsEmpty) {
+                    if (typeTimer !== null) {
+                        clearInterval(typeTimer);
+                        $scope.inputBox.value = EXAMPLE_SONG;
+                        typeTimer = null;
+                    }
+
+                    charTimer = changeCharacters($scope.inputBox, EXAMPLE_CHORDS);
+                    boxIsEmpty = false;
+                }
+                break;
+            case 2:
+                if (charTimer !== null) {
+                    clearInterval(charTimer);
+                    $scope.inputBox.value = EXAMPLE_SONG_CHORDS;
+                    charTimer = null;
+                }
+                break;
+            case 3:
+                resizeGutter(previewChangeData);
+                setTimeout(() => {
+                    __intro.refresh();
+                }, 210);
+                break;
+            case 4:
+                resizeGutter(previewChangeData);
+                setTimeout(() => {
+                    __intro.refresh();
+                }, 210);
+                break;
+            default:
+                break;
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         $scope = Bind.createScope();
         _chordHelperElement = document.querySelector('#chord-helper');
         $scope.inputBox.onInput = onTextInput;
         $scope.inputBox.onChange = onTextInput;
         $scope.tempo.onChange = () => { modifyTempo(0); };
+
+        document.addEventListener('tutorials:change', (event) => {
+            let data = event.detail;
+            if (data)
+                onTutorialChange(data.index, data.targetElement);
+        }, false);
 
         const fiddleId = getFiddleId();
         if (fiddleId) {

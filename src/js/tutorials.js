@@ -1,8 +1,50 @@
 (function () {
     const STORAGE_KEY = 'cfTutorialState';
+    let _currentStepIndex = 0;
     let _intro = null;
-    
+
+    function insert(original, index, value) {
+        return original.substr(0, index) + value + original.substr(index);
+    }
+
+    window.typeCharacters = function typeCharacters(element, input) {
+        let i = 0;
+        const timer = setInterval(() => {
+            if (input[i]) {
+                element.value += input[i++];
+            } else {
+                clearTimeout(timer);
+            }
+        }, 50);
+
+        return timer;
+    }
+
+    window.changeCharacters = function changeCharacters(element, inputs) {
+        let i = 0;
+        let p = 0;
+        const timer = setInterval(() => {
+            if (inputs[p]) {
+                let position = inputs[p].position;
+                let character = inputs[p].input[i];
+                if (character) {
+                    element.value = insert(element.value, position + i, character);
+                    i++;
+                } else {
+                    i = 0;
+                    p++;
+                }
+            } else {
+                clearTimeout(timer);
+            }
+        }, 100);
+
+        return timer;
+    }
+
     window.showTutorials = function showTutorials() {
+        _currentStepIndex = 0;
+
         if (_intro === null) {
             const _options = {
                 skipLabel: 'done',
@@ -26,19 +68,19 @@
                         intro: 'Welcome to Chord Fiddle :)',
                     },
                     {
-                        name: 'song-panel',
+                        name: 'song-panel-start',
                         element: '#song',
                         intro: 'The song panel is where you can start writing your song',
                     },
                     {
-                        name: 'left-gutter',
-                        element: document.querySelectorAll('.gutter.gutter-horizontal')[0],
-                        intro: 'Resize your working area using the side bars',
+                        name: 'song-panel-chords',
+                        element: '#song',
+                        intro: 'Add chords by using bracket notation',
                     },
                     {
                         name: 'right-gutter',
                         element: document.querySelectorAll('.gutter.gutter-horizontal')[1],
-                        intro: 'Double clicking a gutter will auto-resize the panels',
+                        intro: 'Drag or double click a gutter to auto-resize the panels',
                     },
                     {
                         name: 'preview-panel',
@@ -61,11 +103,6 @@
                         intro: `When you're done, save your song and write down the unique URL`,
                     },
                     {
-                        name: 'share-button',
-                        element: '#tut-share',
-                        intro: `...Or you can share it from here`,
-                    },
-                    {
                         name: 'end',
                         intro: `Now start making some great music! 🎶`,
                     }
@@ -77,6 +114,12 @@
         }
 
         _intro.start();
+        _intro.onbeforechange(function (targetElement) {
+            let data = { targetElement, index: _currentStepIndex }
+            let event = new CustomEvent('tutorials:change', { detail: data });
+            document.dispatchEvent(event);
+            _currentStepIndex++;
+        });
         _intro.onexit(() => {
             const storageData = JSON.stringify({ complete: true });
             window.localStorage.setItem(STORAGE_KEY, storageData);

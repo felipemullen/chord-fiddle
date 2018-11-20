@@ -52,16 +52,13 @@
      */
     function matchExpressions(line) {
 
-        let result = `<div class="line">${line}</div>`;
+        let result = `<div class="line">${line.replace(/ /g, '&nbsp;')}</div>`;
         let matches = line.match(CHORD_REGEX);
 
         if (matches != null) {
             for (const match of matches) {
                 const chord = match.replace(BRACKETS, '');
-                let chordHtml = `
-                    <span class="chord" data-chord="${chord}">
-                        &nbsp;<span class="chord-above" onmouseover="showChordHelper(this)">${chord}</span>
-                    </span>`;
+                let chordHtml = `<span class="chord" data-chord="${chord}">&nbsp;<span class="chord-above" onmouseover="showChordHelper(this)">${chord}</span></span>`;
                 result = result.replace(match, chordHtml);
             }
         }

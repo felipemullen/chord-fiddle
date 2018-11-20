@@ -111,6 +111,7 @@
 
             _intro = introJs();
             _intro.setOptions(_options);
+            window.__intro = _intro;
         }
 
         _intro.start();

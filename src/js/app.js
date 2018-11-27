@@ -2,6 +2,8 @@
 
     const TIMEOUT_MS = 400;
     const CHORD_REGEX = /\[[A-G]7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
+    const CUSTOM_REGEX = /{.{1,8}(\|(\d,){5}\d)*}/g;
+    const DEFAULT_STRINGS = '-1,-1,-1,-1,-1,-1';
     const BRACKETS = /\[|\]/g;
     const EXAMPLE_SONG = `Today is gonna be the day \nthat they're gonna throw it back to you`;
     const EXAMPLE_CHORDS = [
@@ -17,7 +19,8 @@
 
     const SPLIT_PANELS = ['#metadata', '#song', '#preview'];
     const SPLIT_GUTTER_SIZE = 10;
-    const _activeChords = {};
+    let _activeChords = {};
+    let _customChords = {};
     let _chordHelperElement = null;
     let _splitPanels = null;
     let _panelStates = {};
@@ -34,18 +37,53 @@
 
         const locationRect = element.getBoundingClientRect();
         const chord = element.parentElement.getAttribute('data-chord');
+        const strings = element.parentElement.getAttribute('data-strings');
 
-        if (chord in ChordList) {
-            if (_activeChords[chord] === undefined)
+        // Check custom chords first
+        if (strings) {
+            if (_activeChords[chord] === undefined) {
+                let chordStrings = strings.split(',');
+                let chordList = [chordStrings.map(Number)];
                 _activeChords[chord] = new ChordHelper({
                     chord,
+                    chordList,
                     x: locationRect.left,
                     y: locationRect.bottom,
                     parent: element,
                     pinCallback: onChordPinned
                 });
-            else
+            } else {
+                // Update the strings when needed
+                let activeChord = _activeChords[chord];
+                if (activeChord._chordList[0].join(',') === DEFAULT_STRINGS) {
+                    let cs = strings.split(',');
+                    let chordList = [cs.map(Number)];
+                    _activeChords[chord] = new ChordHelper({
+                        chord,
+                        chordList,
+                        x: locationRect.left,
+                        y: locationRect.bottom,
+                        parent: element,
+                        pinCallback: onChordPinned
+                    });
+                }
+
                 _activeChords[chord].popup({ x: locationRect.left, y: locationRect.bottom, parent: element });
+            }
+        } else if (chord in ChordList) {
+            if (_activeChords[chord] === undefined) {
+                _activeChords[chord] = new ChordHelper({
+                    chord,
+                    chordList: ChordList[chord],
+                    x: locationRect.left,
+                    y: locationRect.bottom,
+                    parent: element,
+                    pinCallback: onChordPinned
+                });
+            }
+            else {
+                _activeChords[chord].popup({ x: locationRect.left, y: locationRect.bottom, parent: element });
+            }
         }
 
         preventParse = false;
@@ -55,19 +93,57 @@
         _chordHelperElement.classList.toggle('d-none', true);
     };
 
+    function getChordMatches(line) {
+        const matches = [];
+
+        let customChordMatches = line.match(CUSTOM_REGEX);
+        if (customChordMatches != null) {
+            for (const m of customChordMatches) {
+                const [name, strings] = m.split('|');
+                name = name.replace(/{|}/g, '');
+                strings = strings
+                    ? strings.replace('}', '')
+                    : DEFAULT_STRINGS;
+
+                if (strings || _customChords[name] === undefined) {
+                    _customChords[name] = {
+                        name,
+                        strings,
+                        replacement: `{${name}}`,
+                        fullMatch: `{${name}|${strings}}`
+                    };
+                }
+
+                matches.push(_customChords[name]);
+            }
+        }
+
+        let basicChords = line.match(CHORD_REGEX);
+        if (basicChords != null) {
+            for (const m of basicChords) {
+                const name = m.replace(BRACKETS, '');
+                matches.push({ name, replacement: m });
+            }
+        }
+
+        return matches;
+    }
+
     /**
      * @param {string} line 
      */
     function matchExpressions(line) {
 
         let result = `<div class="line">${line.replace(/ /g, '&nbsp;')}</div>`;
-        let matches = line.match(CHORD_REGEX);
+        let matches = getChordMatches(line);
 
         if (matches != null) {
             for (const match of matches) {
-                const chord = match.replace(BRACKETS, '');
-                let chordHtml = `<span class="chord" data-chord="${chord}">&nbsp;<span class="chord-above" onmouseover="showChordHelper(this)">${chord}</span></span>`;
-                result = result.replace(match, chordHtml);
+                const strings = match.strings ? `data-strings="${match.strings}"` : '';
+                const chordHtml = `<span class="chord" data-chord="${match.name}" ${strings}>&nbsp;<span class="chord-above" onmouseover="showChordHelper(this)">${match.name}</span></span>`;
+
+                result = result.replace(match.replacement, chordHtml);
+                result = result.replace(match.fullMatch, chordHtml);
             }
         }
 
@@ -309,6 +385,8 @@
 
         function reset() {
             window.history.pushState('', '', '/');
+            _activeChords = {};
+            _customChords = {};
             $scope.inputBox.value = '';
             $scope.outputBox.value = '';
             $scope.tempo.value = 80;

@@ -22,7 +22,7 @@
     `;
 
     class ChordHelper {
-        constructor({ chord, x, y, parent, pinCallback }) {
+        constructor({ chord, chordList, x, y, parent, pinCallback }) {
             this._chordIndex = 0;
             this._mouseOffsetX = 0;
             this._mouseOffsetY = 0;
@@ -46,7 +46,7 @@
             this.attachButtonListeners();
 
             this._chord = chord;
-            this._chordList = ChordList[chord];
+            this._chordList = chordList;
 
             this._wrapperElement.style.left = `${x}px`;
             this._wrapperElement.style.top = `${y}px`;
@@ -119,7 +119,7 @@
         }
 
         generateDiagram() {
-            this._notes = ChordList[this._chord][this._chordIndex];
+            this._notes = this._chordList[this._chordIndex];
 
             if (this._diagramElement.childElementCount > 0)
                 this._diagramElement.querySelector('svg').remove();

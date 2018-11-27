@@ -95,8 +95,7 @@ div.line {
 }
 
 .editor .editor-panel, .editor .editor-panel textarea {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
     background-color: var(--editor-body);
 }
 

@@ -2,7 +2,7 @@
 
     const TIMEOUT_MS = 400;
     const CHORD_REGEX = /\[[A-G]7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
-    const CUSTOM_REGEX = /{.{1,8}(\|(\d,){5}\d)*}/g;
+    const CUSTOM_REGEX = /{.{1,8}(\|(-*\d,){5}-*\d)*}/g;
     const DEFAULT_STRINGS = '-1,-1,-1,-1,-1,-1';
     const BRACKETS = /\[|\]/g;
     const EXAMPLE_SONG = `Today is gonna be the day \nthat they're gonna throw it back to you`;
@@ -12,7 +12,12 @@
         { position: 48, input: '[Dsus4]' },
         { position: 78, input: '[A7sus4]' }
     ];
+    const EXAMPLE_CUSTOM_CHORDS = [
+        { position: 0, input: '{B-42|-1,1,2,3,2,1}\n' },
+        { position: 96, input: '\nBy now{B-42} you should have somehow...' }
+    ];
     const EXAMPLE_SONG_CHORDS = `[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you`;
+    const EXAMPLE_SONG_CUSTOM_CHORDS = `{B-42|-1,1,2,3,2,1}\n[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you\nBy now{B-42} you should have somehow...`;
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
@@ -269,14 +274,24 @@
                     $scope.inputBox.value = EXAMPLE_SONG_CHORDS;
                     charTimer = null;
                 }
+
+                charTimer = changeCharacters($scope.inputBox, EXAMPLE_CUSTOM_CHORDS);
                 break;
             case 3:
+                if (charTimer !== null) {
+                    clearInterval(charTimer);
+                    $scope.inputBox.value = EXAMPLE_SONG_CUSTOM_CHORDS;
+                    charTimer = null;
+                }
+
+                break;
+            case 4:
                 resizeGutter(previewChangeData);
                 setTimeout(() => {
                     __intro.refresh();
                 }, 210);
                 break;
-            case 4:
+            case 5:
                 resizeGutter(previewChangeData);
                 setTimeout(() => {
                     __intro.refresh();

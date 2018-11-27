@@ -78,6 +78,11 @@
                         intro: 'Add chords by using bracket notation',
                     },
                     {
+                        name: 'song-panel-custom',
+                        element: '#song',
+                        intro: 'You can write custom chords using curly braces'
+                    },
+                    {
                         name: 'right-gutter',
                         element: document.querySelectorAll('.gutter.gutter-horizontal')[1],
                         intro: 'Drag or double click a gutter to auto-resize the panels',

@@ -13,11 +13,11 @@
         { position: 78, input: '[A7sus4]' }
     ];
     const EXAMPLE_CUSTOM_CHORDS = [
-        { position: 0, input: '{B-42|-1,1,2,3,2,1}\n' },
-        { position: 109, input: '\nBy now{B-42} you should have somehow...' }
+        { position: 0, input: '{B-42|-1,1,2,3,2,1}\n---\n' },
+        { position: 113, input: '\nBy now{B-42} you should\'ve somehow...' }
     ];
     const EXAMPLE_SONG_CHORDS = `[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you`;
-    const EXAMPLE_SONG_CUSTOM_CHORDS = `{B-42|-1,1,2,3,2,1}\n[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you\nBy now{B-42} you should have somehow...`;
+    const EXAMPLE_SONG_CUSTOM_CHORDS = `{B-42|-1,1,2,3,2,1}\n---\n[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you\nBy now{B-42} you should have somehow...`;
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
@@ -157,9 +157,20 @@
 
     function parse(rawLines) {
         let output = '';
+        let lastWasSeparator = false;
 
         for (const line of rawLines) {
-            output += matchExpressions(line.trim());
+            if (line === '---') {
+                if (lastWasSeparator === false) {
+                    output = output.substr(0, output.length - 4);
+                }
+
+                output += `<hr class="separator">`;
+                lastWasSeparator = true;
+            } else {
+                output += matchExpressions(line.trim());
+                lastWasSeparator = false;
+            }
             output += '<br>';
         }
 

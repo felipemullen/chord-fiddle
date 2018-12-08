@@ -118,10 +118,22 @@
                     <label for="tuning" class="form-label">Tuning</label>
                     <select bind="tuning" name="tuning" class="form-control">
                         <option value="standard">Standard (E-A-D-G-B-E)</option>
-                        <option value="standard">Drop D (D-A-D-G-B-E)</option>
-                        <option value="standard">Open G (D-G-D-G-B-D)</option>
-                        <option value="standard">Open D (D-A-D-F#-A-D)</option>
-                        <option value="standard">Open E (E-B-E-G#-B-E)</option>
+                        <option value="drop-d">Drop D (D-A-D-G-B-E)</option>
+                        <option value="major-3rd">Major Thirds (G#-C-E-G#-C-E)</option>
+                        <option value="all-4th">All Fourths (E-A-D-G-C-F)</option>
+                        <option value="nst">NST (C-G-D-A-E-G)</option>
+                        <option value="open-a">Open A (E-A-C#-E-A-E)</option>
+                        <option value="open-c">Open C (C-G-C-C-G-E)</option>
+                        <option value="open-g">Open G (D-G-D-G-B-D)</option>
+                        <option value="open-d">Open D (D-A-D-F#-A-D)</option>
+                        <option value="open-e">Open E (E-B-E-G#-B-E)</option>
+                        <option value="open-c6">Open C6 (C-A-C-G-C-E)</option>
+                        <option value="dadgad">DADGAD (D-A-D-G-A-D)</option>
+                        <option value="dadadd">DADADD (D-A-D-A-D-D)</option>
+                        <option value="standard-eb">Standard Eb (Eb-Ab-Db-Gb-Bb-eb)</option>
+                        <option value="standard-d">Standard D (D-G-C-F-A-D)</option>
+                        <option value="drop-c">Drop C (C-G-C-F-A-D)</option>
+                        <option value="drop-b">Drop B (B-F#-B-E-G#-C#)</option>
                     </select>
                     <label for="capo" class="form-label">Capo</label>
                     <select bind="capo" name="capo" class="form-control">
@@ -129,6 +141,15 @@
                         <option value="1">1st Fret</option>
                         <option value="2">2nd Fret</option>
                         <option value="3">3rd Fret</option>
+                        <option value="4">4th Fret</option>
+                        <option value="5">5th Fret</option>
+                        <option value="6">6th Fret</option>
+                        <option value="7">7th Fret</option>
+                        <option value="8">8th Fret</option>
+                        <option value="9">9th Fret</option>
+                        <option value="10">10th Fret</option>
+                        <option value="11">11th Fret</option>
+                        <option value="12">12th Fret</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +162,30 @@
             <div id="preview" class="flex-grow-1 d-flex flex-column editor-panel">
                 <h5 class="panel-header">Preview</h5>
                 <div class="no-wrap d-flex flex-column flex-grow-1">
-                    <div class="d-flex flex-grow-1">
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="p-2 mb-2 metadata">
+                            <h4>
+                                <span bind="previewTitle" class="text-capitalize font-weight-light">[Title]</span>
+                                <span class="font-weight-light">by</span>
+                                <span bind="previewArtist" class="text-capitalize">[Artist]</span>
+                            </h4>
+                            <div bind="previewDescription" class="subtext mb-1"></div>
+                            <div class="subtext">
+                                <span class="font-weight-bold">Tuning:</span>
+                                <span bind="previewTuning">Standard</span>
+                            </div>
+                            <div class="subtext d-flex justify-content-between">
+                                <div>
+                                    <span class="font-weight-bold">Capo:</span>
+                                    <span bind="previewCapo">None</span>
+                                </div>
+                                <div>
+                                    <span bind="previewCount">0</span>
+                                    <span>views</span>
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="mt-2 p-2 flex-grow-1" bind="outputBox"></div>
                     </div>
                 </div>

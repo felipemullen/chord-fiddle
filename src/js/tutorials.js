@@ -52,6 +52,7 @@
                 hideNext: true,
                 showStepNumbers: false,
                 scrollToElement: false,
+                disableInteraction: true,
                 showBullets: false,
                 tooltipClass: 'tuts-tooltip',
                 hints: [
@@ -121,14 +122,16 @@
 
         _intro.start();
         _intro.onbeforechange(function (targetElement) {
-            let data = { targetElement, index: _currentStepIndex }
-            let event = new CustomEvent('tutorials:change', { detail: data });
+            const data = { targetElement, index: _currentStepIndex }
+            const event = new CustomEvent('tutorials:change', { detail: data });
             document.dispatchEvent(event);
             _currentStepIndex++;
         });
         _intro.onexit(() => {
             const storageData = JSON.stringify({ complete: true });
             window.localStorage.setItem(STORAGE_KEY, storageData);
+            const event = new CustomEvent('tutorials:exit');
+            this.document.dispatchEvent(event);
         });
     }
 

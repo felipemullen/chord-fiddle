@@ -18,6 +18,9 @@
     ];
     const EXAMPLE_SONG_CHORDS = `[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you`;
     const EXAMPLE_SONG_CUSTOM_CHORDS = `{B-42|-1,1,2,3,2,1}\n---\n[Em7]Today is [G]gonna be the day \nthat they're [Dsus4]gonna throw it back to [A7sus4]you\nBy now{B-42} you should have somehow...`;
+    const EXAMPLE_SONG_ARTIST = 'Oasis';
+    const EXAMPLE_SONG_TITLE = 'Wonderwall';
+    const EXAMPLE_SONG_DESCRIPTION = 'A simple song to get you started.\nNote that the custom chord is not actually part of the real song ;)';
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
@@ -177,11 +180,22 @@
         return output;
     }
 
+    function setPreviewMetadata() {
+        $scope.previewTitle.text($scope.title.value || '[Title]');
+        $scope.previewArtist.text($scope.artist.value || '[Artist]');
+        const tuning = $scope.tuning._element.options[$scope.tuning._element.selectedIndex];
+        const capo = $scope.capo._element.options[$scope.capo._element.selectedIndex];
+        $scope.previewTuning.text(tuning.innerText);
+        $scope.previewCapo.text(capo.innerText);
+        $scope.previewDescription.text($scope.description.value);
+    }
+
     function transformInput(text) {
         let lines = text.split('\n');
         let content = parse(lines);
 
         $scope.outputBox.html(content);
+        setPreviewMetadata();
     }
 
     function hasParentClass(element, className) {
@@ -318,6 +332,11 @@
         _chordHelperElement = document.querySelector('#chord-helper');
         $scope.inputBox.onInput = onTextInput;
         $scope.inputBox.onChange = onTextInput;
+        $scope.title.onInput = setPreviewMetadata;
+        $scope.artist.onInput = setPreviewMetadata;
+        $scope.capo.onChange = setPreviewMetadata;
+        $scope.tuning.onChange = setPreviewMetadata;
+        $scope.description.onInput = setPreviewMetadata;
         $scope.tempo.onChange = () => { modifyTempo(0); };
 
         document.addEventListener('tutorials:change', (event) => {
@@ -325,6 +344,13 @@
             if (data)
                 onTutorialChange(data.index, data.targetElement);
         }, false);
+
+        document.addEventListener('tutorials:exit', () => {
+            $scope.inputBox.value = EXAMPLE_SONG_CUSTOM_CHORDS;
+            $scope.artist.value = EXAMPLE_SONG_ARTIST;
+            $scope.title.value = EXAMPLE_SONG_TITLE;
+            $scope.description.value = EXAMPLE_SONG_DESCRIPTION;
+        });
 
         const fiddleId = getFiddleId();
         if (fiddleId) {
@@ -342,6 +368,7 @@
         } else {
             showLoading(false);
             createSplitPanels();
+            setPreviewMetadata();
         }
 
         function getFiddleId() {
@@ -352,7 +379,7 @@
         }
 
         function loadFiddle({ data }) {
-            const { id, fiddle } = data;
+            const { id, fiddle, viewCount } = data;
             if (id && fiddle) {
                 // change window url
                 window.history.pushState('', '', `?f=${id}`);
@@ -366,8 +393,10 @@
                 $scope.capo.value = fiddle.capo;
                 $scope.tempo.value = fiddle.tempo;
 
+                $scope.previewCount.text(viewCount || 0);
                 $scope.saveButton.text('Update');
             }
+            setPreviewMetadata();
         }
 
         window.saveFiddle = function saveFiddle() {
@@ -489,7 +518,7 @@
         };
 
         let _delayedInputHandler = null;
-        function onTextInput(textAreaElement) {
+        function onTextInput() {
             if (preventParse === true)
                 return;
 
@@ -501,7 +530,6 @@
                 transformInput($scope.inputBox.value);
                 _delayedInputHandler = null;
             }, TIMEOUT_MS);
-
         }
 
         function modifyTempo(delta) {

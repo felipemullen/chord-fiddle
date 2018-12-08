@@ -1,7 +1,7 @@
 (function () {
 
     const TIMEOUT_MS = 400;
-    const CHORD_REGEX = /\[[A-G]7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
+    const CHORD_REGEX = /\[[A-G]b*7*4*#*m*(sus)*(dim)*(maj)*4*#*7*\]/g;
     const CUSTOM_REGEX = /{.{1,8}(\|(-*\d,){5}-*\d)*}/g;
     const DEFAULT_STRINGS = '-1,-1,-1,-1,-1,-1';
     const BRACKETS = /\[|\]/g;

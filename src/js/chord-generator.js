@@ -94,7 +94,7 @@
             const startString = chartInfo.notes.indexOf(chartInfo.lowestNonOpen);
             const x1 = (startString * chartInfo.fretWidth) - (chartInfo.barSize / 4);
             const x2 = ((STRING_COUNT - 1) * chartInfo.fretWidth) + (chartInfo.barSize / 4);
-            let y = (chartInfo.lowestNonOpen * chartInfo.fretHeight) - (chartInfo.fretHeight / 2);
+            let y = ((chartInfo.lowestNonOpen + chartInfo.yOffset) * chartInfo.fretHeight) - (chartInfo.fretHeight / 2);
 
             const bar = noteGroup.line(x1, y, x2, y);
             bar.stroke({
@@ -118,11 +118,25 @@
 
                 const note = noteGroup.circle(chartInfo.noteCircleSize);
                 const x = (i * chartInfo.fretWidth) - (chartInfo.noteCircleSize / 2) + offset;
-                const y = (n * chartInfo.fretHeight) - (chartInfo.fretHeight / 2) - (chartInfo.noteCircleSize / 2);
+                const y = ((n + chartInfo.yOffset) * chartInfo.fretHeight) - (chartInfo.fretHeight / 2) - (chartInfo.noteCircleSize / 2);
 
                 note.move(x, y);
                 note.addClass('fretboard-notes');
             }
+        }
+
+        if (chartInfo.isBarChord && chartInfo.yOffset !== 0) {
+            const annotation = noteGroup.text(`${chartInfo.lowestNonOpen} fr`);
+            annotation.font({
+                anchor: 'middle',
+                size: chartInfo.textAnnotationSize
+            });
+
+            const x = -(chartInfo.textAnnotationSize * 2) + (chartInfo.textAnnotationSize / 4);
+            const y = ((chartInfo.lowestNonOpen + chartInfo.yOffset) * chartInfo.fretHeight) - (chartInfo.fretHeight / 2) - (chartInfo.textAnnotationSize / 2);
+
+            annotation.move(x, y);
+            annotation.addClass('fretboard-text');
         }
 
         noteGroup.move(0, chartInfo.height);
@@ -191,15 +205,25 @@
             fretBoardWidth: (fretWidth * (STRING_COUNT - 1)),
             fretBoardHeight: (fretHeight * (FRETS - 1)),
             isBarChord: checkBarChord(notes, lowestNonOpen),
+            // offset all notes on the fretboard so they are never more
+            // than 1 fret away from the head
+            yOffset: (lowestNonOpen > 2) ? ((-lowestNonOpen) + 1) : 0,
             barSize: 5,
             fretLineSize: 1,
             headSize: (stringSize * 4),
             noteCircleSize: 7,
+            textAnnotationSize: 10,
             titleFontSize: 14,
             height: 0
         };
     }
 
+    /**
+     * Entry point for drawing chord as svg
+     * @param { HTMLElement } element 
+     * @param { String } chord 
+     * @param { Array } notes 
+     */
     function chordGraph(element, chord, notes) {
 
         const chartInfo = getChartInfo(chord, notes);
@@ -223,7 +247,7 @@
         drawStringNames(mainGroup, chartInfo);
 
         const edgePadding = (chartInfo.noteCircleSize / 2) * 2;
-        canvas.viewbox(-edgePadding, 0, chartInfo.fretBoardWidth + edgePadding * 2, chartInfo.height);
+        canvas.viewbox(-edgePadding - (chartInfo.textAnnotationSize * 2), 0, chartInfo.fretBoardWidth + edgePadding * 2 + (chartInfo.textAnnotationSize * 2), chartInfo.height);
     }
 
     window.ChordGraph = window.ChordGraph || chordGraph;

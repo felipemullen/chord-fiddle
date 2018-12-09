@@ -26,7 +26,8 @@ exports.createFiddle = functions.https.onCall(async (data, context) => {
             const newRecord = {
                 id,
                 created: new Date().getTime(),
-                fiddle: data
+                fiddle: data,
+                views: 1
             }
             db.ref(`/fiddle/${id}`).set(newRecord);
 
@@ -47,12 +48,13 @@ exports.updateFiddle = functions.https.onCall(async (data, context) => {
     const dbData = await ref.once('value');
 
     if (dbData.exists() === true) {
+        const record = dbData.val();
         await ref.update({
             fiddle,
             modified: new Date().getTime(),
         });
 
-        return data;
+        return { ...data, viewCount: record.viewCount };
     } else {
         throw new functions.https.HttpsError('invalid-argument', 'Invalid Id');
     }
@@ -68,6 +70,12 @@ exports.getFiddle = functions.https.onCall(async (data, context) => {
 
     if (dbRecord.exists() === true) {
         let data = dbRecord.val();
+
+        // Update number of hits
+        ref.child('viewCount').transaction(function (hits) {
+            return (hits || 0) + 1;
+        });
+
         return data;
     } else {
         throw new functions.https.HttpsError('not-found');

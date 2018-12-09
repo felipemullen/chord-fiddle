@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "parcel build -d ./public ./src/index.html",
     "start": "parcel -d ./public ./src/index.html",
+    "debug-firebase": "firebase serve",
     "deploy": "firebase deploy",
     "deploy-functions": "firebase deploy --only functions",
     "deploy-web": "firebase deploy --only hosting"

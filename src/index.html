@@ -109,9 +109,9 @@
             <!-- TODO: strum patterns -->
             <!-- TODO: chord list -->
             <!-- TODO: transpose -->
-            <div id="metadata" class="flex-grow-1 editor-panel no-wrap">
-                <h5 class="panel-header">Metadata</h5>
-                <div class="p-3 form">
+            <div id="metadata" class="flex-grow-1 d-flex flex-column editor-panel">
+                <h5 class="panel-header mb-0">Metadata</h5>
+                <div class="p-3 form no-wrap">
                     <input bind="title" class="form-control" type="text" placeholder="Title">
                     <input bind="artist" class="form-control" type="text" placeholder="Artist">
                     <textarea bind="description" class="form-control" type="text" rows="5" placeholder="Description"></textarea>
@@ -152,6 +152,10 @@
                         <option value="12">12th Fret</option>
                     </select>
                 </div>
+                <div id="ad-roll" class="mt-auto"></div>
+                <div class="text-center font-weight-light p-1 subtext">
+                    <a target="_blank" href="/advertise">advertise with us</a>
+                </div>
             </div>
             <div id="song" class="flex-grow-1 d-flex flex-column editor-panel no-wrap">
                 <h5 id="tut-song" class="panel-header mb-0">Song</h5>
@@ -160,8 +164,8 @@
                 </div>
             </div>
             <div id="preview" class="flex-grow-1 d-flex flex-column editor-panel">
-                <h5 class="panel-header">Preview</h5>
-                <div class="no-wrap d-flex flex-column flex-grow-1">
+                <h5 class="panel-header mb-0">Preview</h5>
+                <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex flex-column flex-grow-1">
                         <div class="p-2 mb-2 metadata">
                             <h4>
@@ -186,7 +190,7 @@
                             </div>
 
                         </div>
-                        <div class="mt-2 p-2 flex-grow-1" bind="outputBox"></div>
+                        <div class="mt-2 p-2 flex-grow-1 no-wrap" bind="outputBox"></div>
                     </div>
                 </div>
             </div>

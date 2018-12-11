@@ -81,3 +81,21 @@ exports.getFiddle = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('not-found');
     }
 });
+
+exports.fetchAd = functions.https.onCall(async (data, context) => {
+    const adRef = db.ref('/ads/');
+    const lastIndex = (await adRef.child('lastIndex').once('value')).val();
+    const campaignsRecord = await adRef.child('/campaigns').once('value');
+    const campaigns = campaignsRecord.val();
+
+    const newIndex = (lastIndex + 1) % campaigns.length;
+    adRef.update({ lastIndex: newIndex });
+
+    const adToServe = campaigns[newIndex];
+
+    adRef.child(`${newIndex}/viewCount`).transaction(function (views) {
+        return (views || 0) + 1;
+    });
+
+    return adToServe;
+});

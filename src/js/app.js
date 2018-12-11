@@ -24,11 +24,13 @@
     const getFiddle = firebase.functions().httpsCallable('getFiddle');
     const createFiddle = firebase.functions().httpsCallable('createFiddle');
     const updateFiddle = firebase.functions().httpsCallable('updateFiddle');
+    const fetchAd = firebase.functions().httpsCallable('fetchAd');
 
     const SPLIT_PANELS = ['#metadata', '#song', '#preview'];
     const SPLIT_GUTTER_SIZE = 10;
     let _activeChords = {};
     let _customChords = {};
+    let _adRollElement = null;
     let _chordHelperElement = null;
     let _splitPanels = null;
     let _panelStates = {};
@@ -327,7 +329,31 @@
         }
     }
 
+    function displayAd(adData) {
+        if (adData) {
+            if (_adRollElement === null)
+                _adRollElement = document.querySelector('#ad-roll');
+
+            for (const child of _adRollElement.children) {
+                child.remove();
+            }
+
+            const adAnchorElement = document.createElement('a');
+            adAnchorElement.target = '_blank';
+            adAnchorElement.href = adData.link;
+            adAnchorElement.innerHTML = `
+                <img src="${adData.imgSrc}" />
+            `;
+
+            _adRollElement.appendChild(adAnchorElement);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        fetchAd().then((result) => {
+            displayAd(result.data);
+        })
+
         $scope = Bind.createScope();
         _chordHelperElement = document.querySelector('#chord-helper');
         $scope.inputBox.onInput = onTextInput;

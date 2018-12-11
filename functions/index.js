@@ -93,7 +93,7 @@ exports.fetchAd = functions.https.onCall(async (data, context) => {
 
     const adToServe = campaigns[newIndex];
 
-    adRef.child(`${newIndex}/viewCount`).transaction(function (views) {
+    adRef.child(`campaigns/${newIndex}/viewCount`).transaction(function (views) {
         return (views || 0) + 1;
     });
 

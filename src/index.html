@@ -67,17 +67,17 @@
                 <div class="dropdown-menu dropdown-menu-right settings-menu">
                     <h6 class="dropdown-header">Settings</h6>
                     <div class="dropdown-divider"></div>
-                    <div class="switch ml-3">
-                        <!-- TODO: change wrapping -->
+                    <!-- TODO: change wrapping -->
+                    <!-- <div class="switch ml-3">
                         <input type="checkbox" data-setting="wordWrapOn" class="switch" id="word-wrap-on">
                         <label for="word-wrap-on">Line wrapping</label>
-                    </div>
-                    <div class="switch ml-3">
-                        <!-- TODO: change diagrams -->
+                    </div> -->
+                    <!-- TODO: change diagrams -->
+                    <!-- <div class="switch ml-3">
                         <input type="checkbox" data-setting="diagramsOn" class="switch" id="chords-on">
                         <label for="chords-on">Chord diagrams</label>
-                    </div>
-                    <div class="dropdown-divider"></div>
+                    </div> -->
+                    <!-- <div class="dropdown-divider"></div> -->
                     <div class="form-group p-3">
                         <label for="theme-select">Color Scheme</label>
                         <select class="form-control" onchange="changeColors(this)" id="theme-select">
@@ -111,48 +111,50 @@
             <!-- TODO: transpose -->
             <div id="metadata" class="flex-grow-1 d-flex flex-column editor-panel">
                 <h5 class="panel-header mb-0">Metadata</h5>
-                <div class="p-3 form no-wrap">
-                    <input bind="title" class="form-control" type="text" placeholder="Title">
-                    <input bind="artist" class="form-control" type="text" placeholder="Artist">
-                    <textarea bind="description" class="form-control" type="text" rows="5" placeholder="Description"></textarea>
-                    <label for="tuning" class="form-label">Tuning</label>
-                    <select bind="tuning" name="tuning" class="form-control">
-                        <option value="standard">Standard (E-A-D-G-B-E)</option>
-                        <option value="drop-d">Drop D (D-A-D-G-B-E)</option>
-                        <option value="major-3rd">Major Thirds (G#-C-E-G#-C-E)</option>
-                        <option value="all-4th">All Fourths (E-A-D-G-C-F)</option>
-                        <option value="nst">NST (C-G-D-A-E-G)</option>
-                        <option value="open-a">Open A (E-A-C#-E-A-E)</option>
-                        <option value="open-c">Open C (C-G-C-C-G-E)</option>
-                        <option value="open-g">Open G (D-G-D-G-B-D)</option>
-                        <option value="open-d">Open D (D-A-D-F#-A-D)</option>
-                        <option value="open-e">Open E (E-B-E-G#-B-E)</option>
-                        <option value="open-c6">Open C6 (C-A-C-G-C-E)</option>
-                        <option value="dadgad">DADGAD (D-A-D-G-A-D)</option>
-                        <option value="dadadd">DADADD (D-A-D-A-D-D)</option>
-                        <option value="standard-eb">Standard Eb (Eb-Ab-Db-Gb-Bb-eb)</option>
-                        <option value="standard-d">Standard D (D-G-C-F-A-D)</option>
-                        <option value="drop-c">Drop C (C-G-C-F-A-D)</option>
-                        <option value="drop-b">Drop B (B-F#-B-E-G#-C#)</option>
-                    </select>
-                    <label for="capo" class="form-label">Capo</label>
-                    <select bind="capo" name="capo" class="form-control">
-                        <option value="0">None</option>
-                        <option value="1">1st Fret</option>
-                        <option value="2">2nd Fret</option>
-                        <option value="3">3rd Fret</option>
-                        <option value="4">4th Fret</option>
-                        <option value="5">5th Fret</option>
-                        <option value="6">6th Fret</option>
-                        <option value="7">7th Fret</option>
-                        <option value="8">8th Fret</option>
-                        <option value="9">9th Fret</option>
-                        <option value="10">10th Fret</option>
-                        <option value="11">11th Fret</option>
-                        <option value="12">12th Fret</option>
-                    </select>
+                <div class="p-3 no-wrap flex-grow-1">
+                    <div class="form">
+                        <input bind="title" class="form-control" type="text" placeholder="Title">
+                        <input bind="artist" class="form-control" type="text" placeholder="Artist">
+                        <textarea bind="description" class="form-control" type="text" rows="5" placeholder="Description"></textarea>
+                        <label for="tuning" class="form-label">Tuning</label>
+                        <select bind="tuning" name="tuning" class="form-control">
+                            <option value="standard">Standard (E-A-D-G-B-E)</option>
+                            <option value="drop-d">Drop D (D-A-D-G-B-E)</option>
+                            <option value="major-3rd">Major Thirds (G#-C-E-G#-C-E)</option>
+                            <option value="all-4th">All Fourths (E-A-D-G-C-F)</option>
+                            <option value="nst">NST (C-G-D-A-E-G)</option>
+                            <option value="open-a">Open A (E-A-C#-E-A-E)</option>
+                            <option value="open-c">Open C (C-G-C-C-G-E)</option>
+                            <option value="open-g">Open G (D-G-D-G-B-D)</option>
+                            <option value="open-d">Open D (D-A-D-F#-A-D)</option>
+                            <option value="open-e">Open E (E-B-E-G#-B-E)</option>
+                            <option value="open-c6">Open C6 (C-A-C-G-C-E)</option>
+                            <option value="dadgad">DADGAD (D-A-D-G-A-D)</option>
+                            <option value="dadadd">DADADD (D-A-D-A-D-D)</option>
+                            <option value="standard-eb">Standard Eb (Eb-Ab-Db-Gb-Bb-eb)</option>
+                            <option value="standard-d">Standard D (D-G-C-F-A-D)</option>
+                            <option value="drop-c">Drop C (C-G-C-F-A-D)</option>
+                            <option value="drop-b">Drop B (B-F#-B-E-G#-C#)</option>
+                        </select>
+                        <label for="capo" class="form-label">Capo</label>
+                        <select bind="capo" name="capo" class="form-control">
+                            <option value="0">None</option>
+                            <option value="1">1st Fret</option>
+                            <option value="2">2nd Fret</option>
+                            <option value="3">3rd Fret</option>
+                            <option value="4">4th Fret</option>
+                            <option value="5">5th Fret</option>
+                            <option value="6">6th Fret</option>
+                            <option value="7">7th Fret</option>
+                            <option value="8">8th Fret</option>
+                            <option value="9">9th Fret</option>
+                            <option value="10">10th Fret</option>
+                            <option value="11">11th Fret</option>
+                            <option value="12">12th Fret</option>
+                        </select>
+                    </div>
                 </div>
-                <div id="ad-roll" class="mt-auto"></div>
+                <div id="ad-roll" class="mt-auto d-flex justify-content-center align-items-center"></div>
                 <div class="text-center font-weight-light p-1 subtext">
                     <a target="_blank" href="/advertise">advertise with us</a>
                 </div>
@@ -190,7 +192,7 @@
                             </div>
 
                         </div>
-                        <div class="mt-2 p-2 flex-grow-1 no-wrap" bind="outputBox"></div>
+                        <div class="mt-2 px-2 pt-3 pb-2 flex-grow-1 no-wrap" bind="outputBox"></div>
                     </div>
                 </div>
             </div>

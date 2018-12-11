@@ -96,7 +96,8 @@ div.line {
 }
 
 .editor .editor-panel, .editor .editor-panel textarea {
-    overflow: auto;
+    overflow: hidden;
+    min-width: 0;
     background-color: var(--editor-body);
 }
 
@@ -284,11 +285,17 @@ div.line {
 /* Ads */
 #ad-roll {
     width: 100%;
-    height: 30%;
+    height: 20%;
     background-color: #f4f4f4;
+    border-top: 1px solid var(--gutter-border);
+}
+
+#ad-roll a {
+    overflow: hidden;
+    max-height: 100%;
 }
 
 #ad-roll img {
-    border-top: 1px solid var(--editor-headers-border);
+    margin: auto;
     width: 100%;
 }

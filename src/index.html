@@ -44,7 +44,8 @@
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a id="tut-share" title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');" title="Share this Chord Fiddle">
+                <a id="tut-share" title="Share Fiddle" href="javascript:;" class="nav-link" onclick="toggleMenu('share-menu');"
+                    title="Share this Chord Fiddle">
                     <i class="fas fa-fw fa-share-alt"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right share-menu">
@@ -89,7 +90,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://github.com/felipemullen/chord-fiddle-issues/issues" target="_blank" title="Bug Reports and Feature Requests">
+                <a class="nav-link" href="https://github.com/felipemullen/chord-fiddle-issues/issues" target="_blank"
+                    title="Bug Reports and Feature Requests">
                     <i class="fas fa-bug"></i>
                 </a>
             </li>
@@ -154,7 +156,9 @@
                         </select>
                     </div>
                 </div>
-                <div id="ad-roll" class="mt-auto d-flex justify-content-center align-items-center"></div>
+                <div id="ad-wrapper" onmouseover="expandAd(this)" onmouseout="collapseAd(this)">
+                    <div id="ad-roll"></div>
+                </div>
                 <div class="text-center font-weight-light p-1 subtext">
                     <a target="_blank" href="/advertise">advertise with us</a>
                 </div>
@@ -264,6 +268,7 @@
     <script src="./js/chord-helper.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/tutorials.js"></script>
+    <script src="./js/ad-helper.js"></script>
 </body>
 
 </html>

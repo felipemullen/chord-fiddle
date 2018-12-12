@@ -218,8 +218,7 @@ div.line {
     font-size: 0.8em;
 }
 
-.editor-panel#preview span[bind="previewTitle"],
-.editor-panel#preview span[bind="previewArtist"] {
+.editor-panel#preview span[bind="previewTitle"], .editor-panel#preview span[bind="previewArtist"] {
     word-break: break-all;
 }
 
@@ -283,19 +282,23 @@ div.line {
 }
 
 /* Ads */
-#ad-roll {
-    width: 100%;
+
+#ad-wrapper {
+    display: flex;
     height: 20%;
-    background-color: #f4f4f4;
+    background-color: var(--editor-form);
     border-top: 1px solid var(--gutter-border);
+
+    transition: height 250ms ease-in-out;
 }
 
-#ad-roll a {
+#ad-roll {
+    flex: 1;
     overflow: hidden;
-    max-height: 100%;
 }
 
 #ad-roll img {
-    margin: auto;
+    object-fit: cover;
     width: 100%;
+    height: 100%;
 }

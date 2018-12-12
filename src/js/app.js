@@ -211,7 +211,7 @@
         const currentSize = _panelStates[targetPanelId];
 
         // Expand if less than a third, collapse otherwise
-        if (currentSize <= 33.3) {
+        if (currentSize <= 40) {
             document.querySelectorAll('.editor-panel').forEach(panel => {
                 panel.style.flexBasis = `calc(${10}% - ${SPLIT_GUTTER_SIZE}px)`;
                 _panelStates[`#${panel.id}`] = 10;
@@ -221,8 +221,9 @@
             _panelStates[targetPanelId] = 80;
         } else {
             document.querySelectorAll('.editor-panel').forEach(panel => {
-                panel.style.flexBasis = `calc(${33.3}% - ${SPLIT_GUTTER_SIZE}px)`;
-                _panelStates[`#${panel.id}`] = 33.3;
+                const size = (panel.id === 'metadata') ? 20 : 40;
+                panel.style.flexBasis = `calc(${size}% - ${SPLIT_GUTTER_SIZE}px)`;
+                _panelStates[`#${panel.id}`] = size;
             });
         }
     }
@@ -248,7 +249,7 @@
             onDragEnd: toggleTransitions,
             gutter: (index, direction) => {
                 const panel = SPLIT_PANELS[index];
-                _panelStates[panel] = 33.3;
+                _panelStates[panel] = 80;
                 const gutter = document.createElement('div');
 
                 gutter.className = `gutter gutter-${direction}`;
@@ -574,5 +575,8 @@
                 _metronomeIsOn = true;
             }
         };
+
+        const data = { target: { getAttribute: () => '#preview' } }
+        resizeGutter(data);
     });
 })();

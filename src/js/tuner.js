@@ -1,12 +1,12 @@
 (function () {
 
     const strings = {
-        e2: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-e2.wav?alt=media&token=f3dd1fd3-2dc5-4c0a-bb53-18f89bb8a28c'),
-        a2: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-a2.wav?alt=media&token=0e9572f2-b0c8-42d3-9d29-ce3ddeb3b8ef'),
-        d3: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-d3.wav?alt=media&token=5f5ea7be-8fde-4398-95f5-949e864f2172'),
-        g3: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-g3.wav?alt=media&token=93f272a1-8829-4d91-83f4-91e264341dad'),
-        b3: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-b3.wav?alt=media&token=01143125-17cc-4774-9bde-358425cf0db0'),
-        e4: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tune-e4.wav?alt=media&token=6caa5cf7-a4bd-4429-843d-4b6d55ee7460')
+        e1: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FE1.m4a?alt=media&token=bc9830c7-9322-481c-a55f-5d30bfd8c154'),
+        a1: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FA1.m4a?alt=media&token=8e353311-ca59-45fd-ac70-a0cb403034e2'),
+        d2: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FD2.m4a?alt=media&token=debdfae5-f128-4864-abe4-6028a8432f3e'),
+        g2: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FG2.m4a?alt=media&token=0cd2df7c-098d-4f8d-b2da-1a88465a228a'),
+        b2: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FB2.m4a?alt=media&token=33794f74-a5e3-4e59-8077-600f9fb48f29'),
+        e3: new Audio('https://firebasestorage.googleapis.com/v0/b/chord-fiddle.appspot.com/o/tuning%2Fstandard%2FE3.m4a?alt=media&token=1d2ee008-d311-4c4b-af65-ba8aa90e201a')
     };
 
     function playSound(element, stringName) {

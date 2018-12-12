@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build -d ./public ./src/index.html",
+    "build": "parcel build -d ./public ./src/index.html --no-source-maps",
     "start": "parcel -d ./public ./src/index.html",
     "debug-firebase": "firebase serve",
     "deploy": "firebase deploy",

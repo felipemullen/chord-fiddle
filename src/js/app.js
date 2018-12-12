@@ -465,6 +465,8 @@
 
             if (fiddleId) {
                 return `${window.location.host}?f=${fiddleId}`;
+            } else {
+                return `${window.location.host}`;
             }
         }
 
